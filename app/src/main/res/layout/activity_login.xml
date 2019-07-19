@@ -72,17 +72,19 @@
         android:layout_marginTop="10dp"
         android:background="@color/colorPrimary"
         />
-    <Button
+
+
+    <com.kakao.usermgmt.LoginButton
+        android:id="@+id/loginButton"
         android:layout_width="280dp"
         android:layout_height="wrap_content"
-        android:textSize="20dp"
-        android:textStyle="bold"
-        android:textColor="#ffffff"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
         android:background="@color/colorPrimaryDark"
         android:text="로그인"
-        android:layout_marginTop="10dp"
-        android:layout_gravity="center"
-        android:id="@+id/loginButton"/>
+        android:textColor="#ffffff"
+        android:textSize="20dp"
+        android:textStyle="bold" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

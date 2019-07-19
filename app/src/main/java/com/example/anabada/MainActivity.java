@@ -28,7 +28,6 @@ public class MainActivity extends AppCompatActivity {
         noticeListView =(ListView)findViewById(R.id.noticeListView);
         noticeList=new ArrayList<Notice>();
         noticeList.add(new Notice("공지사항입니다.","호감도상승","2019-07-18"));
-        
         noticeList.add(new Notice("님들 하이욤.","호감도상승","2019-07-18"));
         noticeList.add(new Notice("발소리 작게좀요.","호감도상승","2019-07-18"));
         noticeList.add(new Notice("한이음 쪼아!.","호감도상승","2019-07-18"));
