@@ -4,11 +4,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+
+import com.kakao.usermgmt.UserManagement;
+import com.kakao.usermgmt.callback.LogoutResponseCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,6 +90,17 @@ public class MainActivity extends AppCompatActivity {
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();//Fragment트랜잭션은 Fragment 연산에 관련된 작업
                 fragmentTransaction.replace(R.id.fragment,new GameFragment()); //fragment 부분을 RoomFragment로 대체해주는것
                 fragmentTransaction.commit();
+            }
+        });
+    }
+
+    public void logout(View view) {
+        UserManagement.getInstance().requestLogout(new LogoutResponseCallback() {
+            @Override
+            public void onCompleteLogout() {
+                final Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
     }

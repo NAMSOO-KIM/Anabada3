@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.content.pm.PackageInstaller;
 import android.os.Bundle;
+import android.support.v4.media.session.PlaybackStateCompat;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -18,6 +20,8 @@ import com.kakao.auth.Session;
 import com.kakao.network.ErrorResult;
 import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.MeResponseCallback;
+import com.kakao.usermgmt.callback.MeV2ResponseCallback;
+import com.kakao.usermgmt.response.MeV2Response;
 import com.kakao.usermgmt.response.model.UserProfile;
 import com.kakao.util.exception.KakaoException;
 import com.kakao.util.helper.log.Logger;
@@ -34,6 +38,12 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        if (Session.getCurrentSession().checkAndImplicitOpen()) {
+            // 액세스토큰 유효하거나 리프레시 토큰으로 액세스 토큰 갱신을 시도할 수 있는 경우
+            final Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
 
         callback = new SessionCallback();
         Session.getCurrentSession().addCallback(callback);
@@ -49,32 +59,15 @@ public class LoginActivity extends AppCompatActivity {
     private class SessionCallback implements ISessionCallback {
         @Override
         public void onSessionOpened() {
-            UserManagement.getInstance().requestMe(new MeResponseCallback() {
-                @Override
-                public void onFailure(ErrorResult errorResult) {
-                    String message = "failed to get user info. msg=" + errorResult;
-                    ErrorCode result = ErrorCode.valueOf(errorResult.getErrorCode());
-                    if (result == ErrorCode.CLIENT_ERROR_CODE) {
-                        //에러로 인한 로그인 실패
-                        //finish();
-                    } else {
-                        //redirectMainActivity();
-                    }
-                }
+            UserManagement.getInstance().me(new MeV2ResponseCallback() {
                 @Override
                 public void onSessionClosed(ErrorResult errorResult) {
-                }
-                @Override
-                public void onNotSignedUp() {
 
                 }
+
                 @Override
-                public void onSuccess(UserProfile userProfile) {
-                    //로그인에 성공하면 로그인한 사용자의 일련번호, 닉네임, 이미지url등을 리턴합니다.
-                    //사용자 ID는 보안상의 문제로 제공하지 않고 일련번호는 제공합니다.
-                   // Log.e("UserProfile", userProfile.toString());
-                    //Log.e("UserProfile", userProfile.getId() + "");
-                    //long number = userProfile.getId();
+                public void onSuccess(MeV2Response result) {
+                    Log.e("profile",result.toString());
                     final Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);
                     finish();
@@ -88,7 +81,5 @@ public class LoginActivity extends AppCompatActivity {
             // 어쩔때 실패되는지는 테스트를 안해보았음 ㅜㅜ
         }
     }
-
-
-
 }
+
