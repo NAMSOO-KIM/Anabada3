@@ -55,6 +55,19 @@
             android:layout_marginTop="8dp"
             android:layout_marginLeft="8dp"/>
 
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/logout"
+            android:text="logout"
+            android:textStyle="bold"
+            android:textColor="#FFFFFFFF"
+            android:textSize="18dp"
+            android:background="@color/colorPrimary"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="8dp"
+            android:onClick="logout"/>
 
     </LinearLayout>
 

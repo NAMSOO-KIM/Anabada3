@@ -4,11 +4,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+
+import com.kakao.usermgmt.UserManagement;
+import com.kakao.usermgmt.callback.LogoutResponseCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,8 +32,6 @@ public class MainActivity extends AppCompatActivity {
         noticeListView =(ListView)findViewById(R.id.noticeListView);
         noticeList=new ArrayList<Notice>();
         noticeList.add(new Notice("공지사항입니다.","호감도상승","2019-07-18"));
-
-        noticeList.add(new Notice("님들 하이욤.","호감도상승","2019-07-18"));
         noticeList.add(new Notice("님들 하이욤.","호감도상승","2019-07-18"));
         noticeList.add(new Notice("발소리 작게좀요.","호감도상승","2019-07-18"));
         noticeList.add(new Notice("한이음 쪼아!.","호감도상승","2019-07-18"));
@@ -88,6 +90,17 @@ public class MainActivity extends AppCompatActivity {
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();//Fragment트랜잭션은 Fragment 연산에 관련된 작업
                 fragmentTransaction.replace(R.id.fragment,new GameFragment()); //fragment 부분을 RoomFragment로 대체해주는것
                 fragmentTransaction.commit();
+            }
+        });
+    }
+
+    public void logout(View view) {
+        UserManagement.getInstance().requestLogout(new LogoutResponseCallback() {
+            @Override
+            public void onCompleteLogout() {
+                final Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
     }
