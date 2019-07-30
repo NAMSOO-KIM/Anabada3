@@ -50,26 +50,13 @@ public class MainActivity extends AppCompatActivity {
         noticeList = new ArrayList<Notice>();
 
         adapter = new NoticeListAdapter(getApplicationContext(), noticeList);
-        //noticeListView.setAdapter(adapter);
 
-        noticeListView =(ListView)findViewById(R.id.noticeListView);
-        noticeList=new ArrayList<Notice>();
-        noticeList.add(new Notice("공지사항입니다.","호감도상승","2019-07-18"));
-        noticeList.add(new Notice("님들 하이욤.","호감도상승","2019-07-18"));
-        noticeList.add(new Notice("발소리 작게좀요.","호감도상승","2019-07-18"));
-        noticeList.add(new Notice("한이음 쪼아!.","호감도상승","2019-07-18"));
-        noticeList.add(new Notice("공지사항입니다.","호감도상승","2019-07-18"));
-        noticeList.add(new Notice("공지사항입니다.","호감도상승","2019-07-18"));
-        adapter= new NoticeListAdapter(getApplicationContext(),noticeList);
-        noticeListView.setAdapter(adapter);
-
-
+//        noticeListView.setAdapter(adapter);
 
         final Button roomButton = (Button) findViewById(R.id.roomButton);
         final Button scheduleButton = (Button) findViewById(R.id.scheduleButton);
         final Button GameButton = (Button) findViewById(R.id.GameButton);
         final LinearLayout notice = (LinearLayout) findViewById(R.id.notice);
-
 
         roomButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,6 +111,8 @@ public class MainActivity extends AppCompatActivity {
             String target;
            @Override
            protected void onPreExecute(){
+//               새롭게 추가함
+               super.onPreExecute();
                target = "http://gksdldma.cafe24.com/NoticeList.php";
 
            }
@@ -144,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
                     bufferedReader.close();
                     inputStream.close();
                     httpURLConnection.disconnect();
-                    return stringBuilder.toString().trim();
+                    return stringBuilder.toString().trim(); //결과값이 여기에 리턴되면 이 값이 onPostExcute의 파라미터로 넘어감
 
                }
                catch(Exception e){
@@ -155,9 +144,12 @@ public class MainActivity extends AppCompatActivity {
             }
             @Override
             public void onProgressUpdate(Void... values){
-               super.onProgressUpdate();
-
+              // super.onProgressUpdate();
+                //변경됨.
+                super.onProgressUpdate(values);
             }
+
+            //가져온 데이터를 Notice 객체에 넣은 뒤 리스트뷰 출력을 위한 List 객체에 넣어주는 부분
             @Override
             public void onPostExecute(String result){
                try{
@@ -165,19 +157,17 @@ public class MainActivity extends AppCompatActivity {
                    JSONArray jsonArray = jsonObject.getJSONArray("response");
                    int count =0;
                    String noticeContent, noticeName, noticeDate;
+                   //json타입의 값을 하나씩 빼서 Notice 객체에 저장후 리스트에 추가하는 부분
                    while(count < jsonArray.length()){
                        JSONObject object = jsonArray.getJSONObject(count);
                        noticeContent= object.getString("noticeContent");
                        noticeName= object.getString("noticeName");
                        noticeDate= object.getString("noticeDate");
                        Notice notice = new Notice(noticeContent, noticeName, noticeDate);
-                      noticeListView.setAdapter(adapter); //추가됨
+                       noticeListView.setAdapter(adapter); //추가됨
                        noticeList.add(notice);
-                       adapter.notifyDataSetChanged();
-
+                      // adapter.notifyDataSetChanged();//추가됨
                        count++;
-
-
                    }
                }
                catch (Exception e){
