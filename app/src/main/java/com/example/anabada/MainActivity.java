@@ -4,18 +4,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-<<<<<<< HEAD
+
 import android.os.AsyncTask;
-=======
+
 import android.content.Intent;
->>>>>>> 4bca7f6fe5bc494fdefcefb1860a8eccaa339ca1
+
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
-<<<<<<< HEAD
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -24,11 +24,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-=======
+
 import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.LogoutResponseCallback;
 
->>>>>>> 4bca7f6fe5bc494fdefcefb1860a8eccaa339ca1
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,13 +44,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-<<<<<<< HEAD
+
         noticeListView = (ListView) findViewById(R.id.noticeListView);
         noticeList = new ArrayList<Notice>();
 
         adapter = new NoticeListAdapter(getApplicationContext(), noticeList);
         //noticeListView.setAdapter(adapter);
-=======
+
         noticeListView =(ListView)findViewById(R.id.noticeListView);
         noticeList=new ArrayList<Notice>();
         noticeList.add(new Notice("공지사항입니다.","호감도상승","2019-07-18"));
@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         noticeList.add(new Notice("공지사항입니다.","호감도상승","2019-07-18"));
         adapter= new NoticeListAdapter(getApplicationContext(),noticeList);
         noticeListView.setAdapter(adapter);
->>>>>>> 4bca7f6fe5bc494fdefcefb1860a8eccaa339ca1
+
 
 
         final Button roomButton = (Button) findViewById(R.id.roomButton);
@@ -117,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
         new BackgroundTask().execute();
     }
 
-<<<<<<< HEAD
+
         class BackgroundTask extends AsyncTask<Void, Void, String>
         {
             String target;
@@ -186,10 +186,10 @@ public class MainActivity extends AppCompatActivity {
 
             }
         }
-    }
+    //}
 
 
-=======
+
     public void logout(View view) {
         UserManagement.getInstance().requestLogout(new LogoutResponseCallback() {
             @Override
@@ -201,4 +201,4 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 }
->>>>>>> 4bca7f6fe5bc494fdefcefb1860a8eccaa339ca1
+

@@ -47,6 +47,19 @@ public class LoginActivity extends AppCompatActivity {
 
         callback = new SessionCallback();
         Session.getCurrentSession().addCallback(callback);
+
+//        버튼에 대한 설정
+        Button gotomainButton = (Button)findViewById(R.id.gotomainButton);
+        gotomainButton.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+//                gotoIntent를 통해 버튼눌렀을 때 화면전환 가능
+                Intent gotoIntent = new Intent(LoginActivity.this,MainActivity.class);
+                LoginActivity.this.startActivity(gotoIntent);
+
+            }
+        });
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
