@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
 
 import org.json.JSONArray;
@@ -199,6 +200,20 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+    private long lastTimeBackPressed;
+
+//    뒤로가기 2번 누를시 종료
+    @Override
+    public void onBackPressed(){
+        if(System.currentTimeMillis()-lastTimeBackPressed<1500)
+        {
+            finish();
+            return;
+
+        }
+        Toast.makeText(this,"'뒤로'버튼 한번 더 누르면 종료.", Toast.LENGTH_SHORT);
+        lastTimeBackPressed=System.currentTimeMillis();
     }
 }
 
