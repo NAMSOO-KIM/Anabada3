@@ -8,16 +8,42 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin ="10dp"
-        android:background="#ffffff">
+        android:layout_height="500dp"
+        android:orientation="vertical">
 
-        <ListView
+
+            <ListView
+                android:id="@+id/roomListView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:divider="#ffffff"
+                android:dividerHeight="10dp">
+
+            </ListView>
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/roomListView"
-            android:dividerHeight="10dp"
-            android:divider="#ffffff"></ListView>
+            android:orientation="vertical">
 
-    </LinearLayout>
+            <Button
+
+                android:id="@+id/makeroomButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="50dp"
+                android:background="@color/colorPrimaryDark"
+                android:text="방 만들기"
+                android:textColor="#ffffff"
+                android:textSize="20dp"
+                android:textStyle="bold"/>
+
+
+        </LinearLayout>
+
+
+
+
 </LinearLayout>

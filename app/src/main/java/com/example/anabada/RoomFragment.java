@@ -1,14 +1,17 @@
 package com.example.anabada;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 
 /**
@@ -53,6 +56,8 @@ public class RoomFragment extends Fragment {
         return fragment;
     }
 
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +65,20 @@ public class RoomFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+
+//        Button makeroomButton = (Button)findViewById(R.id.makeroomButton);
+//        makeroomButton.setOnClickListener(new View.OnClickListener(){
+//
+//            @Override
+//            public void onClick(View view) {
+////                gotoIntent를 통해 버튼눌렀을 때 화면전환 가능
+//
+//                Intent makeroomIntent = new Intent(RoomFragment.this.getActivity(), RoomRegisterActivity.class);
+//                RoomFragment.this.startActivity(makeroomIntent);
+//
+//            }
+//        });
     }
 
     @Override
@@ -68,6 +87,7 @@ public class RoomFragment extends Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_room, container, false);
     }
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
