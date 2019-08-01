@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 
 /**
@@ -57,6 +58,30 @@ public class RoomFragment extends Fragment {
     }
 
 
+    //fragment 화면 전환 부분
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Toast.makeText(this.getContext(), "This is SearchFragment", Toast.LENGTH_SHORT).show();
+        View v = inflater.inflate(R.layout.fragment_room, container, false);
+
+
+        Button makeroomButton = (Button)v.findViewById(R.id.makeroomButton);
+        makeroomButton.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+//                makeroomIntent를 통해 버튼눌렀을 때 화면전환 가능
+
+                Intent makeroomIntent = new Intent(RoomFragment.this.getActivity(), RoomRegisterActivity.class);
+                RoomFragment.this.startActivity(makeroomIntent);
+
+            }
+        });
+        return v;
+    }
+    //fragment 화면 전환 부분 끝
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,14 +104,16 @@ public class RoomFragment extends Fragment {
 //
 //            }
 //        });
+
+
+
+
+
+
+
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_room, container, false);
-    }
+
 
 
     // TODO: Rename method, update argument and hook method into UI event
