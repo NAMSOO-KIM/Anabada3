@@ -16,7 +16,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoactionBar">
-        <activity android:name=".GameActivity"></activity>
+        <activity android:name=".BoardActivity"></activity>
+        <activity android:name=".RoomJoin" />
+        <activity
+            android:name=".ui.login.RoomJoin"
+            android:label="@string/title_activity_room_join" />
+        <activity android:name=".GameActivity" />
         <activity android:name=".ScheduleActivity" />
         <activity android:name=".RoomActivity" />
         <activity android:name=".RoomRegisterActivity" />

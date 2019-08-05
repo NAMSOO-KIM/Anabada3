@@ -18,52 +18,56 @@ import org.json.JSONObject;
 
 public class RoomRegisterActivity extends AppCompatActivity {
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room_register);
 
 
+        //idText 는 방 제목
+        //passwordText 는 방 비밀번호
        final EditText idText = (EditText)findViewById(R.id.idText);
        final EditText passwordText = (EditText)findViewById(R.id.passwordText);
 
-        Button registerButton = (Button) findViewById(R.id.registerButton);
-
-
-
-        registerButton.setOnClickListener(new View.OnClickListener() {
+        Button room_registerButton = (Button) findViewById(R.id.room_registerButton);
+        room_registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String boardTitle = idText.getText().toString();
-                String boardPassword= passwordText.getText().toString();
+                String roomTitle = idText.getText().toString();
+                String roomPassword= passwordText.getText().toString();
 
+             //Lister에서 원하는 결과값 다룰수 있게
                 Response.Listener<String> responseListener = new Response.Listener<String>(){
 
                     @Override
                     public void onResponse(String response) {
-                        try{
+                        try {
                             JSONObject jsonResponse = new JSONObject(response);
                             boolean success = jsonResponse.getBoolean("success");
-                            if(success){
+                            if (success) {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(RoomRegisterActivity.this);
                                 builder.setMessage("방 생성 완료!")
-                                        .setPositiveButton("확인",null)
+                                        .setPositiveButton("확인", null)
                                         .create()
                                         .show();
-                                Intent intent = new Intent(RoomRegisterActivity.this,RoomActivity.class);
-                                RoomRegisterActivity.this.startActivity(intent);
-                            }
-                            else{
-                                AlertDialog.Builder builder = new AlertDialog.Builder(RoomRegisterActivity.this);
-                                builder.setMessage("방 생성 실패!")
-                                        .setNegativeButton("다시 시도",null)
-                                        .create()
-                                        .show();
-                                Intent intent = new Intent(RoomRegisterActivity.this,RoomActivity.class);
+
+
+                                Intent intent = new Intent(RoomRegisterActivity.this, RoomActivity.class);
                                 RoomRegisterActivity.this.startActivity(intent);
                             }
 
-                        }catch (JSONException e)
+                            else{
+                                AlertDialog.Builder builder = new AlertDialog.Builder(RoomRegisterActivity.this);
+                                builder.setMessage("방 생성 실패!")
+                                        .setNegativeButton("확인",null)
+                                        .create()
+                                        .show();
+
+                           }
+
+                        }
+                            catch (JSONException e)
                         {
                             e.printStackTrace();
                         }
@@ -71,7 +75,7 @@ public class RoomRegisterActivity extends AppCompatActivity {
                     }
                 };
 
-                RoomRegisterRequest roomRegisterRequest = new RoomRegisterRequest(boardTitle, boardPassword,responseListener);
+                RoomRegisterRequest roomRegisterRequest = new RoomRegisterRequest(roomTitle, roomPassword,responseListener);
                 RequestQueue queue = Volley.newRequestQueue(RoomRegisterActivity.this);
                 queue.add(roomRegisterRequest); //버튼 클릭시 roomRegisterRequest 실행
 
@@ -79,4 +83,7 @@ public class RoomRegisterActivity extends AppCompatActivity {
             }
         });
     }
+    //회원 등록 창 꺼지면 실행
+
+
 }
