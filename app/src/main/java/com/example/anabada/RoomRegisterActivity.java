@@ -50,7 +50,7 @@ public class RoomRegisterActivity extends AppCompatActivity {
                                         .setPositiveButton("확인",null)
                                         .create()
                                         .show();
-                                Intent intent = new Intent(RoomRegisterActivity.this,RoomFragment.class);
+                                Intent intent = new Intent(RoomRegisterActivity.this,RoomActivity.class);
                                 RoomRegisterActivity.this.startActivity(intent);
                             }
                             else{
@@ -59,7 +59,7 @@ public class RoomRegisterActivity extends AppCompatActivity {
                                         .setNegativeButton("다시 시도",null)
                                         .create()
                                         .show();
-                                Intent intent = new Intent(RoomRegisterActivity.this,RoomFragment.class);
+                                Intent intent = new Intent(RoomRegisterActivity.this,RoomActivity.class);
                                 RoomRegisterActivity.this.startActivity(intent);
                             }
 

@@ -58,50 +58,48 @@ public class MainActivity extends AppCompatActivity {
         final Button GameButton = (Button) findViewById(R.id.GameButton);
         final LinearLayout notice = (LinearLayout) findViewById(R.id.notice);
 
-        roomButton.setOnClickListener(new View.OnClickListener() {
+        roomButton.setOnClickListener(new View.OnClickListener(){
+
+
             @Override
             public void onClick(View view) {
-                notice.setVisibility(View.GONE);//공지사항 부분 보이지 않도록
-                roomButton.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark)); //클릭 된거는 색 어둡게
-                scheduleButton.setBackgroundColor(getResources().getColor(R.color.colorPrimary)); //클릭 안된거 밝게
-                GameButton.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                //        버튼에 대한 설정
 
-                FragmentManager fragmentManager = getSupportFragmentManager(); //Fragment 관리해주는 역할
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();//Fragment트랜잭션은 Fragment 연산에 관련된 작업
-                fragmentTransaction.replace(R.id.fragment, new RoomFragment()); //fragment 부분을 RoomFragment로 대체해주는것
-                fragmentTransaction.commit();
+                roomButton.setOnClickListener(new View.OnClickListener(){
+
+                    @Override
+                    public void onClick(View view) {
+//                roomButton를 통해 버튼눌렀을 때 화면전환 가능
+                        Intent roomIntent = new Intent(MainActivity.this,RoomActivity.class);
+                        MainActivity.this.startActivity(roomIntent);
+
+                    }
+                });
+
+            }
+
+        });
+        scheduleButton.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                //roomButton를 통해 버튼눌렀을 때 화면전환 가능
+                Intent scheduleIntent = new Intent(MainActivity.this,ScheduleActivity.class);
+                MainActivity.this.startActivity(scheduleIntent);
             }
         });
+        GameButton.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                Intent GameIntent = new Intent(MainActivity.this,GameActivity.class);
+                MainActivity.this.startActivity(GameIntent);
+            }
+        });
+
+
         // new BackgroundTask().execute(); //DB 접근해서 찾아봄
-        scheduleButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                notice.setVisibility(View.GONE);
-                roomButton.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-                scheduleButton.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
-                GameButton.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
 
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.fragment, new ScheduleFragment());
-                fragmentTransaction.commit();
-            }
-        });
-
-        GameButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                notice.setVisibility(View.GONE);//공지사항 부분 보이지 않도록
-                roomButton.setBackgroundColor(getResources().getColor(R.color.colorPrimary)); //클릭 된거는 색 어둡게
-                scheduleButton.setBackgroundColor(getResources().getColor(R.color.colorPrimary)); //클릭 안된거 밝게
-                GameButton.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
-
-                FragmentManager fragmentManager = getSupportFragmentManager(); //Fragment 관리해주는 역할
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();//Fragment트랜잭션은 Fragment 연산에 관련된 작업
-                fragmentTransaction.replace(R.id.fragment, new GameFragment()); //fragment 부분을 RoomFragment로 대체해주는것
-                fragmentTransaction.commit();
-            }
-        });
         new BackgroundTask().execute();
     }
 
