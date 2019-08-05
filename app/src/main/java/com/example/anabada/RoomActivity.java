@@ -35,6 +35,7 @@ public class RoomActivity extends AppCompatActivity {
         setContentView(R.layout.activity_room);
 
 
+
         roomListView = (ListView) findViewById(R.id.roomListView);
         roomList = new ArrayList<Room>();
 
@@ -54,14 +55,6 @@ public class RoomActivity extends AppCompatActivity {
             }
         });
 
-//        Button joinbutton = (Button)findViewById(R.id.joinButton);
-//        joinbutton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent joinIntent = new Intent(RoomActivity.this,RoomJoin.class);
-//
-//            }
-//        });
 
 
 
