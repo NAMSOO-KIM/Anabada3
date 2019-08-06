@@ -34,7 +34,7 @@ public class GyuzActivity4 extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent1;
-                if(rd1.isChecked() == true){
+                if(rd2.isChecked() == true){
                     num1++;
                     intent1 = new Intent(getApplicationContext(),GyuzActivity5.class);
                     intent1.putExtra("result",num1.intValue());
