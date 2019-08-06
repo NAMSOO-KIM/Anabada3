@@ -19,4 +19,9 @@ public class GameActivity extends AppCompatActivity {
         Intent intent = new Intent(this, PressGameActivity.class);
         startActivity(intent);
     }
+    public void onClick1(View view){
+        Intent intent = new Intent(this, GyuzActivity1.class);
+        startActivity(intent);
+    }
+
 }
