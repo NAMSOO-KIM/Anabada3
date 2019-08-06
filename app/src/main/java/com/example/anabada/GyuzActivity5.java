@@ -35,10 +35,10 @@ public class GyuzActivity5 extends AppCompatActivity {
                 Intent intent1;
                 if(rd2.isChecked() == true){
                     num1++;
-                    intent1 = new Intent(getApplicationContext(),GyuzActivity5.class);
+                    intent1 = new Intent(getApplicationContext(),GyuzActivity6.class);
                     intent1.putExtra("result",num1.intValue());
                 }else{
-                    intent1 = new Intent(getApplicationContext(),GyuzActivity5.class);
+                    intent1 = new Intent(getApplicationContext(),GyuzActivity6.class);
                     intent1.putExtra("result",num1.intValue());
                 }
                 startActivity(intent1);
