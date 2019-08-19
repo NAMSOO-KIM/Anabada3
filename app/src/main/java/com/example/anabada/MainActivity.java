@@ -1,207 +1,106 @@
 package com.example.anabada;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-
-
-import android.os.AsyncTask;
-
-import android.content.Intent;
-
 import android.os.Bundle;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
+
 import android.view.View;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.Toast;
 
+import androidx.core.view.GravityCompat;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
+import android.view.MenuItem;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import com.google.android.material.navigation.NavigationView;
 
-import com.kakao.usermgmt.UserManagement;
-import com.kakao.usermgmt.callback.LogoutResponseCallback;
+import androidx.drawerlayout.widget.DrawerLayout;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
-import java.util.ArrayList;
-import java.util.List;
+import android.view.Menu;
 
-public class MainActivity extends AppCompatActivity {
-
-    private ListView noticeListView;
-    private NoticeListAdapter adapter;
-    private List<Notice> noticeList;
-
+public class MainActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
-        noticeListView = (ListView) findViewById(R.id.noticeListView);
-        noticeList = new ArrayList<Notice>();
-
-        adapter = new NoticeListAdapter(getApplicationContext(), noticeList);
-
-//        noticeListView.setAdapter(adapter);
-
-        final Button roomButton = (Button) findViewById(R.id.roomButton);
-        final Button scheduleButton = (Button) findViewById(R.id.scheduleButton);
-        final Button GameButton = (Button) findViewById(R.id.GameButton);
-        final LinearLayout notice = (LinearLayout) findViewById(R.id.notice);
-
-        roomButton.setOnClickListener(new View.OnClickListener(){
-
-
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //        버튼에 대한 설정
-
-                roomButton.setOnClickListener(new View.OnClickListener(){
-
-                    @Override
-                    public void onClick(View view) {
-//                roomButton를 통해 버튼눌렀을 때 화면전환 가능
-                        Intent roomIntent = new Intent(MainActivity.this,RoomActivity.class);
-                        MainActivity.this.startActivity(roomIntent);
-
-                    }
-                });
-
-            }
-
-        });
-        scheduleButton.setOnClickListener(new View.OnClickListener(){
-
-            @Override
-            public void onClick(View view) {
-                //roomButton를 통해 버튼눌렀을 때 화면전환 가능
-                Intent scheduleIntent = new Intent(MainActivity.this,ScheduleActivity.class);
-                MainActivity.this.startActivity(scheduleIntent);
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
             }
         });
-        GameButton.setOnClickListener(new View.OnClickListener(){
-
-            @Override
-            public void onClick(View view) {
-                Intent GameIntent = new Intent(MainActivity.this,GameActivity.class);
-                MainActivity.this.startActivity(GameIntent);
-            }
-        });
-
-
-        // new BackgroundTask().execute(); //DB 접근해서 찾아봄
-
-        new BackgroundTask().execute();
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+        navigationView.setNavigationItemSelectedListener(this);
     }
 
-
-        class BackgroundTask extends AsyncTask<Void, Void, String>
-        {
-            String target;
-           @Override
-           protected void onPreExecute(){
-//               새롭게 추가함
-               super.onPreExecute();
-               target = "http://gksdldma.cafe24.com/NoticeList.php";
-
-           }
-
-            @Override
-            protected String doInBackground(Void... voids) {
-               try{
-                URL url = new URL(target);
-                   HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection();
-                    InputStream inputStream = httpURLConnection.getInputStream();
-                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-                    String temp;
-                    StringBuilder stringBuilder = new StringBuilder();
-                    while((temp = bufferedReader.readLine()) !=null){
-                         stringBuilder.append(temp+"\n");
-
-                    }
-                    bufferedReader.close();
-                    inputStream.close();
-                    httpURLConnection.disconnect();
-                    return stringBuilder.toString().trim(); //결과값이 여기에 리턴되면 이 값이 onPostExcute의 파라미터로 넘어감
-
-               }
-               catch(Exception e){
-            e.printStackTrace();
-               }
-
-                return null;
-            }
-            @Override
-            public void onProgressUpdate(Void... values){
-              // super.onProgressUpdate();
-                //변경됨.
-                super.onProgressUpdate(values);
-            }
-
-            //가져온 데이터를 Notice 객체에 넣은 뒤 리스트뷰 출력을 위한 List 객체에 넣어주는 부분
-            @Override
-            public void onPostExecute(String result){
-               try{
-                   JSONObject jsonObject = new JSONObject(result);
-                   JSONArray jsonArray = jsonObject.getJSONArray("response");
-                   int count =0;
-                   String noticeContent, noticeName, noticeDate;
-                   //json타입의 값을 하나씩 빼서 Notice 객체에 저장후 리스트에 추가하는 부분
-                   while(count < jsonArray.length()){
-                       JSONObject object = jsonArray.getJSONObject(count);
-                       noticeContent= object.getString("noticeContent");
-                       noticeName= object.getString("noticeName");
-                       noticeDate= object.getString("noticeDate");
-                       Notice notice = new Notice(noticeContent, noticeName, noticeDate);
-                       noticeListView.setAdapter(adapter); //추가됨
-                       noticeList.add(notice);
-                      // adapter.notifyDataSetChanged();//추가됨
-                       count++;
-                   }
-               }
-               catch (Exception e){
-                e.printStackTrace();
-
-               }
-
-            }
-        }
-    //}
-
-
-
-    public void logout(View view) {
-        UserManagement.getInstance().requestLogout(new LogoutResponseCallback() {
-            @Override
-            public void onCompleteLogout() {
-                final Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
-    }
-    private long lastTimeBackPressed;
-
-//    뒤로가기 2번 누를시 종료
     @Override
-    public void onBackPressed(){
-        if(System.currentTimeMillis()-lastTimeBackPressed<1500)
-        {
-            finish();
-            return;
+    public void onBackPressed() {
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_home) {
+            // Handle the camera action
+        } else if (id == R.id.nav_gallery) {
+
+        } else if (id == R.id.nav_slideshow) {
+
+        } else if (id == R.id.nav_tools) {
+
+        } else if (id == R.id.nav_share) {
+
+        } else if (id == R.id.nav_send) {
 
         }
-        Toast.makeText(this,"'뒤로'버튼 한번 더 누르면 종료.", Toast.LENGTH_SHORT);
-        lastTimeBackPressed=System.currentTimeMillis();
+
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 }
-
