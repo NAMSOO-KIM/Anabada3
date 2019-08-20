@@ -52,7 +52,7 @@
     <EditText
         android:id="@+id/editText6_description"
         android:layout_width="match_parent"
-        android:layout_height="193dp" />
+        android:layout_height="80dp" />
 
     <Space
         android:layout_width="wrap_content"
@@ -77,7 +77,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="등록"
-            android:textSize="24sp" />
+            android:textSize="24dp" />
 
         <Space
             android:layout_width="wrap_content"
@@ -91,7 +91,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="닫기"
-            android:textSize="24sp" />
+            android:textSize="24dp" />
 
         <Space
             android:layout_width="wrap_content"

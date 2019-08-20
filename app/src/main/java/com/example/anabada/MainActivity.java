@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            public void onItemClick(AdapterView adapterView, View view, int i, long l) {
                 Intent intent =new Intent(getApplicationContext(),Product_description.class);
                 startActivity(intent);
             }
@@ -127,7 +127,6 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-
     @Override
     public void onClick(View view) {
         int id=view.getId();
@@ -139,5 +138,8 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-
+    public void product(View view) {
+        Intent intent =new Intent(getApplicationContext(),Product_description.class);
+        startActivity(intent);
+    }
 }

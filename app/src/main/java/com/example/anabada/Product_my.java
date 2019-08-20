@@ -38,4 +38,8 @@ public class Product_my extends AppCompatActivity {
             }
         });
     }
+    public void product(View view) {
+                Intent intent =new Intent(getApplicationContext(),Product_modification.class);
+                startActivity(intent);
+    }
 }
