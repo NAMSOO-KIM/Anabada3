@@ -28,7 +28,7 @@
         android:layout_height="50dp"
         android:layout_weight="1"
         android:gravity="bottom"
-        android:text="<상품 설명>"
+        android:text="상품 설명"
         android:textSize="36sp" />
 
     <TextView
