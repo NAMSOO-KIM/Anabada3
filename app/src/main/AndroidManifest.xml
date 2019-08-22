@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.anabada">
-    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -13,10 +16,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".Product_regist"></activity>
-        <activity android:name=".Product_interest"
-            android:label="내 관심목록"/>
-        <activity android:name=".Product_my"
-            android:label="내가 올림 상품"/>
+        <activity
+            android:name=".Product_interest"
+            android:label="내 관심목록" />
+        <activity
+            android:name=".Product_my"
+            android:label="내가 올림 상품" />
         <activity android:name=".Product_modification" />
         <activity android:name=".Product_description" />
         <activity android:name=".LoginActivity">
@@ -29,18 +34,16 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+
         <provider
-            android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.example.anabada.fileProvider"
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.example.anabada"
             android:exported="false"
             android:grantUriPermissions="true">
-
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
     </application>
-
 </manifest>

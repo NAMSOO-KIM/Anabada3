@@ -10,33 +10,31 @@
         android:layout_width="match_parent"
         android:layout_height="21dp" />
 
-    <ImageView
-        android:id="@+id/imageView6"
-        android:layout_width="364dp"
-        android:layout_height="241dp"
-        android:layout_gravity="center"
-        tools:srcCompat="@tools:sample/backgrounds/scenic" />
-    <LinearLayout
-        android:layout_width="364dp"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="center">
-        <Button
-            android:layout_width="182dp"
-            android:layout_height="wrap_content"
-            android:text="앨범"
-            android:textSize="20dp"
-            android:onClick="pic_regist"
-            android:id="@+id/album"/>
-        <Button
-            android:layout_width="182dp"
-            android:layout_height="wrap_content"
-            android:text="사진 찍기"
-            android:textSize="20dp"
-            android:onClick="pic_regist"
-            android:id="@+id/camera"/>
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="251dp">
 
-    </LinearLayout>
+        <ImageView
+            android:id="@+id/imageView6"
+            android:layout_width="364dp"
+            android:layout_height="241dp"
+            android:layout_gravity="center"
+            android:background="@drawable/photo_frame"
+            android:onClick="makeDialog"
+            tools:srcCompat="@tools:sample/backgrounds/scenic" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="261dp"
+            android:gravity="right|bottom"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="86dp"
+                android:layout_height="59dp"
+                android:background="@drawable/ic_menu_camera" />
+        </LinearLayout>
+    </FrameLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

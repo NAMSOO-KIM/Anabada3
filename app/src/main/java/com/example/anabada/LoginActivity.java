@@ -27,7 +27,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
         Button gotomainButton = (Button) findViewById(R.id.gotomainButton);
-        gotomainButton.setOnClickListener(new View.OnClickListener() {
+        /*gotomainButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String userName = idText.getText().toString();
@@ -76,7 +76,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
             }
-        });
+        });*/
     }
 
 
