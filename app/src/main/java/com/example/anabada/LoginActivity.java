@@ -27,7 +27,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
         Button gotomainButton = (Button) findViewById(R.id.gotomainButton);
-        /*gotomainButton.setOnClickListener(new View.OnClickListener() {
+        gotomainButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String userName = idText.getText().toString();
@@ -73,16 +73,12 @@ public class LoginActivity extends AppCompatActivity {
                 RegisterRequest userRegisterRequest = new RegisterRequest(userName,responseListener);
                 RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);
                 queue.add(userRegisterRequest); //버튼 클릭시 roomRegisterRequest 실행
-
-
             }
-        });*/
+        });
     }
 
-
-
-    public void login(View view) {
+    /*public void login(View view) {
         Intent intent =new Intent(getApplicationContext(),MainActivity.class);
         startActivity(intent);
-    }
+    }*/
 }

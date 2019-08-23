@@ -12,6 +12,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -27,6 +29,7 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
+import com.soundcloud.android.crop.Crop;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,7 +48,7 @@ public class Product_regist extends AppCompatActivity {
     Button cameraBtn;
     final static int TAKE_PICTURE = 1;
     String mCurrentPhotoPath;
-    static final int REQUEST_TAKE_PHOTO = 1;
+    static final int REQUEST_TAKE_PHOTO = 3;
     static final int PICK_FROM_ALBUM = 2;
 
     @Override
@@ -147,8 +150,14 @@ public class Product_regist extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, intent);
         switch (requestCode) {
             case TAKE_PICTURE:
-                if (resultCode == RESULT_OK && intent.hasExtra("data")) {
-                    Bitmap bitmap = (Bitmap) intent.getExtras().get("data");
+                if (resultCode == RESULT_OK) {
+                    File file=new File(mCurrentPhotoPath);
+                    Bitmap bitmap = null;
+                    try {
+                        bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), Uri.fromFile(file));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     if (bitmap != null) {
                         imageView.setImageBitmap(bitmap);
                     }
@@ -170,6 +179,50 @@ public class Product_regist extends AppCompatActivity {
                 else if(resultCode == RESULT_CANCELED)
                 {
                     Toast.makeText(this, "사진 선택 취소", Toast.LENGTH_LONG).show();
+                }
+                break;
+            case REQUEST_TAKE_PHOTO:
+                if (resultCode == RESULT_OK) {
+                    File file = new File(mCurrentPhotoPath);
+                    Bitmap bitmap = null;
+                    try {
+                        bitmap = MediaStore.Images.Media
+                                .getBitmap(getContentResolver(), Uri.fromFile(file));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    if (bitmap != null) {
+                        ExifInterface ei = null;
+                        try {
+                            ei = new ExifInterface(mCurrentPhotoPath);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                                ExifInterface.ORIENTATION_UNDEFINED);
+
+                        Bitmap rotatedBitmap = null;
+                        switch(orientation) {
+
+                            case ExifInterface.ORIENTATION_ROTATE_90:
+                                rotatedBitmap = rotateImage(bitmap, 90);
+                                break;
+
+                            case ExifInterface.ORIENTATION_ROTATE_180:
+                                rotatedBitmap = rotateImage(bitmap, 180);
+                                break;
+
+                            case ExifInterface.ORIENTATION_ROTATE_270:
+                                rotatedBitmap = rotateImage(bitmap, 270);
+                                break;
+
+                            case ExifInterface.ORIENTATION_NORMAL:
+                            default:
+                                rotatedBitmap = bitmap;
+                        }
+                        Toast.makeText(getApplicationContext(), "출력할 문자열", Toast.LENGTH_LONG).show();
+                        imageView.setImageBitmap(rotatedBitmap);
+                    }
                 }
                 break;
         }
@@ -205,7 +258,7 @@ public class Product_regist extends AppCompatActivity {
             // Continue only if the File was successfully created
             if (photoFile != null) {
                 Uri photoURI = FileProvider.getUriForFile(this,
-                        "com.example.anabada.fileprovider",
+                        "com.example.anabada.provider",
                         photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
@@ -221,8 +274,9 @@ public class Product_regist extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int id) {
                         Log.v("알림", "다이얼로그 > 사진촬영 선택");
                         // 사진 촬영 클릭
-                        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                        startActivityForResult(cameraIntent, TAKE_PICTURE);
+                        //Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                        //startActivityForResult(cameraIntent, TAKE_PICTURE);
+                        dispatchTakePictureIntent();
                         //takePhoto();
                     }
                 }).setNeutralButton("앨범선택",
@@ -252,6 +306,35 @@ public class Product_regist extends AppCompatActivity {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
         startActivityForResult(intent, PICK_FROM_ALBUM);
+    }
 
+    public static Bitmap rotateImage(Bitmap source, float angle) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(),
+                matrix, true);
+    }
+
+    private void cropImage(Uri photoUri, File tempFile) {
+
+        Log.d(TAG, "tempFile : " + tempFile);
+
+        /**
+         *  갤러리에서 선택한 경우에는 tempFile 이 없으므로 새로 생성해줍니다.
+         */
+        if(tempFile == null) {
+            try {
+                tempFile = createImageFile();
+            } catch (IOException e) {
+                Toast.makeText(this, "이미지 처리 오류! 다시 시도해주세요.", Toast.LENGTH_SHORT).show();
+                finish();
+                e.printStackTrace();
+            }
+        }
+
+        //크롭 후 저장할 Uri
+        Uri savingUri = Uri.fromFile(tempFile);
+
+        Crop.of(photoUri, savingUri).asSquare().start(this);
     }
 }
