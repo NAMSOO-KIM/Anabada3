@@ -16,8 +16,8 @@
 
         <ImageView
             android:id="@+id/imageView6"
-            android:layout_width="364dp"
-            android:layout_height="241dp"
+            android:layout_width="350dp"
+            android:layout_height="138dp"
             android:layout_gravity="center"
             android:background="@drawable/photo_frame"
             android:onClick="makeDialog"
@@ -30,7 +30,7 @@
             android:orientation="vertical">
 
             <ImageView
-                android:layout_width="86dp"
+                android:layout_width="67dp"
                 android:layout_height="59dp"
                 android:background="@drawable/ic_menu_camera" />
         </LinearLayout>
@@ -43,31 +43,37 @@
 
         <TextView
             android:id="@+id/textView6_title"
-            android:layout_width="107dp"
+            android:layout_width="112dp"
             android:layout_height="46dp"
+            android:fontFamily="@font/dovemayo_bold"
             android:gravity="center"
-            android:text="제목"
+            android:text="제목: "
             android:textSize="30sp" />
 
         <EditText
             android:id="@+id/editText6_title"
             android:layout_width="277dp"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/dovemayo_bold"
+            android:textSize="24sp" />
 
     </LinearLayout>
 
     <TextView
         android:id="@+id/textView6_description"
-        android:layout_width="180dp"
+        android:layout_width="141dp"
         android:layout_height="39dp"
-        android:gravity="center_vertical"
-        android:text="상세 설명"
-        android:textSize="30dp" />
+        android:fontFamily="@font/dovemayo_bold"
+        android:gravity="center|center_vertical"
+        android:text="상품 설명"
+        android:textSize="30sp" />
 
     <EditText
         android:id="@+id/editText6_description"
         android:layout_width="match_parent"
-        android:layout_height="80dp" />
+        android:layout_height="80dp"
+        android:fontFamily="@font/dovemayo_bold"
+        android:textSize="24sp" />
 
     <Space
         android:layout_width="wrap_content"
@@ -92,7 +98,8 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="등록"
-            android:textSize="24dp" />
+            android:textSize="30sp"
+            android:fontFamily="@font/dovemayo_bold"/>
 
         <Space
             android:layout_width="wrap_content"
@@ -104,9 +111,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:fontFamily="@font/dovemayo_bold"
             android:gravity="center"
             android:text="닫기"
-            android:textSize="24dp" />
+            android:textSize="30sp" />
 
         <Space
             android:layout_width="wrap_content"
