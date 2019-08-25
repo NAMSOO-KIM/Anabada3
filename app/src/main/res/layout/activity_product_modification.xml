@@ -11,13 +11,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:fontFamily="@font/dovemayo_bold"
         android:text="TextView"
-        android:textSize="30sp" />
+        android:textSize="36sp" />
 
     <ImageView
         android:id="@+id/imageView3"
         android:layout_width="350dp"
-        android:layout_height="250dp"
+        android:layout_height="70dp"
         android:layout_gravity="center"
         android:layout_weight="1"
         tools:srcCompat="@tools:sample/backgrounds/scenic" />
@@ -27,9 +28,10 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_weight="1"
+        android:fontFamily="@font/dovemayo_bold"
         android:gravity="bottom"
         android:text="상품 설명"
-        android:textSize="36sp" />
+        android:textSize="30sp" />
 
     <TextView
         android:id="@+id/textView3_description2"
@@ -37,7 +39,8 @@
         android:layout_height="190dp"
         android:layout_weight="1"
         android:text="TextView"
-        android:textSize="24sp" />
+        android:textSize="24sp"
+        android:fontFamily="@font/dovemayo_bold"/>
 
     <Space
         android:layout_width="wrap_content"
@@ -60,10 +63,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:fontFamily="@font/dovemayo_bold"
             android:gravity="center"
+            android:onClick="regist"
             android:text="수정"
-            android:textSize="24sp"
-            android:onClick="regist"/>
+            android:textSize="30sp" />
 
         <Space
             android:layout_width="wrap_content"
@@ -75,9 +79,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:fontFamily="@font/dovemayo_bold"
             android:gravity="center"
             android:text="삭제"
-            android:textSize="24sp" />
+            android:textSize="30sp" />
 
         <Space
             android:layout_width="wrap_content"
