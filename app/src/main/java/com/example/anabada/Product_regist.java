@@ -24,6 +24,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
@@ -51,6 +52,9 @@ public class Product_regist extends AppCompatActivity {
     static final int REQUEST_TAKE_PHOTO = 3;
     static final int PICK_FROM_ALBUM = 2;
 
+    //final EditText textView1=findViewById(R.id.editText6_title);
+    //final EditText textView2=findViewById(R.id.editText6_description);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,6 +77,13 @@ public class Product_regist extends AppCompatActivity {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
             }
         }
+
+        /*Intent intent=getIntent();
+        String title=intent.getStringExtra("title");
+        String desc=intent.getStringExtra("desc");
+
+        textView1.setText(title);
+        textView2.setText(desc);*/
 
         //idText 는 방 제목
         //passwordText 는 방 비밀번호
@@ -97,13 +108,14 @@ public class Product_regist extends AppCompatActivity {
                             if (success) {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(Product_regist.this);
                                 builder.setMessage("등록 완료!")
-                                        .setPositiveButton("확인", null)
-                                        .create()
+                                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                Intent intent = new Intent(Product_regist.this, MainActivity.class);
+                                                Product_regist.this.startActivity(intent);
+                                            }
+                                        })
                                         .show();
-
-
-                                Intent intent = new Intent(Product_regist.this, MainActivity.class);
-                                Product_regist.this.startActivity(intent);
                             }
 
                             else{
@@ -124,7 +136,7 @@ public class Product_regist extends AppCompatActivity {
                     }
                 };
 
-                BoardRegisterRequest boardRegisterRequest = new BoardRegisterRequest(boardTitle, boardContents, responseListener);
+                BoardRegisterRequest boardRegisterRequest = new BoardRegisterRequest(boardTitle, boardContents, mCurrentPhotoPath, responseListener);
                 RequestQueue queue = Volley.newRequestQueue(Product_regist.this);
                 queue.add(boardRegisterRequest); //버튼 클릭시 roomRegisterRequest 실행
 
@@ -220,7 +232,6 @@ public class Product_regist extends AppCompatActivity {
                             default:
                                 rotatedBitmap = bitmap;
                         }
-                        Toast.makeText(getApplicationContext(), "출력할 문자열", Toast.LENGTH_LONG).show();
                         imageView.setImageBitmap(rotatedBitmap);
                     }
                 }

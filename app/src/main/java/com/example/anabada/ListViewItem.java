@@ -7,11 +7,23 @@ public class ListViewItem {
     private String titleStr ;
     private String descStr ;
 
-    public void setImage(Drawable icon) {
-       image = icon ;
+    public void setIcon(Drawable icon) {
+        image = icon ;
+    }
+    public void setTitle(String title) {
+        titleStr = title ;
+    }
+    public void setDesc(String desc) {
+        descStr = desc ;
     }
 
-    public Drawable getImage() {
+    public Drawable getIcon() {
         return this.image ;
+    }
+    public String getTitle() {
+        return this.titleStr ;
+    }
+    public String getDesc() {
+        return this.descStr ;
     }
 }

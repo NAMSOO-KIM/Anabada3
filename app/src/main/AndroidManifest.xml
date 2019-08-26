@@ -24,7 +24,7 @@
             android:label="내 관심목록" />
         <activity
             android:name=".Product_my"
-            android:label="내가 올림 상품" />
+            android:label="내가 올린 상품" />
         <activity android:name=".Product_modification" />
         <activity android:name=".Product_description" />
         <activity android:name=".LoginActivity">

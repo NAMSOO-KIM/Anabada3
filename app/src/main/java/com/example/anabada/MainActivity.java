@@ -1,6 +1,7 @@
 package com.example.anabada;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -58,8 +59,8 @@ public class MainActivity extends AppCompatActivity
         listView =(ListView)findViewById(R.id.ProductList);
         listView.setAdapter(adapter);
 
-        adapter.addItem(ContextCompat.getDrawable(this,R.drawable.ic_menu_camera));
-        adapter.addItem(ContextCompat.getDrawable(this,R.drawable.ic_menu_send));
+        adapter.addItem(ContextCompat.getDrawable(this,R.drawable.ic_menu_camera),"camera","camera");
+        adapter.addItem(ContextCompat.getDrawable(this,R.drawable.ic_menu_send),"mark","mark");
 
         fab=(FloatingActionButton)findViewById(R.id.fab);
         fab.setOnClickListener(this);
@@ -67,7 +68,15 @@ public class MainActivity extends AppCompatActivity
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView adapterView, View view, int i, long l) {
+                ListViewItem item = (ListViewItem) adapterView.getItemAtPosition(i) ;
+
+                String titleStr = item.getTitle() ;
+                String descStr = item.getDesc() ;
+                Drawable image = item.getIcon() ;
+
                 Intent intent =new Intent(getApplicationContext(),Product_description.class);
+                intent.putExtra("title",titleStr);
+                intent.putExtra("desc",descStr);
                 startActivity(intent);
             }
         });

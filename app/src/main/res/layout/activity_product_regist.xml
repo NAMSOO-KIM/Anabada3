@@ -16,8 +16,8 @@
 
         <ImageView
             android:id="@+id/imageView6"
-            android:layout_width="350dp"
-            android:layout_height="138dp"
+            android:layout_width="364dp"
+            android:layout_height="241dp"
             android:layout_gravity="center"
             android:background="@drawable/photo_frame"
             android:onClick="makeDialog"
@@ -30,7 +30,7 @@
             android:orientation="vertical">
 
             <ImageView
-                android:layout_width="67dp"
+                android:layout_width="86dp"
                 android:layout_height="59dp"
                 android:background="@drawable/ic_menu_camera" />
         </LinearLayout>

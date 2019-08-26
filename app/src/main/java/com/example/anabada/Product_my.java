@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -27,19 +28,23 @@ public class Product_my extends AppCompatActivity {
         listView.setAdapter(adapter);
 
         // 첫 번째 아이템 추가.
-        adapter.addItem(ContextCompat.getDrawable(this,R.drawable.ic_menu_camera));
-        adapter.addItem(ContextCompat.getDrawable(this,R.drawable.ic_menu_send));
+        adapter.addItem(ContextCompat.getDrawable(this,R.drawable.ic_menu_camera),"camera","camera");
+        adapter.addItem(ContextCompat.getDrawable(this,R.drawable.ic_menu_send),"mark","mark");
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                ListViewItem item = (ListViewItem) adapterView.getItemAtPosition(i) ;
+
+                String titleStr = item.getTitle() ;
+                String descStr = item.getDesc() ;
+                Drawable image = item.getIcon() ;
+
                 Intent intent =new Intent(getApplicationContext(),Product_modification.class);
+                intent.putExtra("title",titleStr);
+                intent.putExtra("desc",descStr);
                 startActivity(intent);
             }
         });
-    }
-    public void product(View view) {
-                Intent intent =new Intent(getApplicationContext(),Product_modification.class);
-                startActivity(intent);
     }
 }

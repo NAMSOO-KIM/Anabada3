@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:fontFamily="@font/dovemayo_bold"
-        android:text="TextView"
+        android:text="상품"
         android:textSize="36sp" />
 
     <ImageView
@@ -24,7 +24,7 @@
         tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
     <TextView
-        android:id="@+id/textView3_description"
+        android:id="@+id/description_text1"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_weight="1"
@@ -34,7 +34,7 @@
         android:textSize="30sp" />
 
     <TextView
-        android:id="@+id/textView3_description2"
+        android:id="@+id/description_text2"
         android:layout_width="match_parent"
         android:layout_height="190dp"
         android:layout_weight="1"
