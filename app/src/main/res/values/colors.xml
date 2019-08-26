@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="colorPrimary">#49E2FD</color>          //시간 보여주는 바
+    <color name="colorPrimaryDark">#49E2FD</color>      //앱이름 보여주는 바
+    <color name="colorAccent">#D81B60</color>            //체크 표시
 </resources>
