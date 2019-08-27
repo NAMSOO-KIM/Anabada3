@@ -19,6 +19,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -35,10 +36,18 @@ import com.soundcloud.android.crop.Crop;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.DatagramPacket;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
+import java.nio.ByteBuffer;
+import java.sql.Blob;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -51,6 +60,7 @@ public class Product_regist extends AppCompatActivity {
     String mCurrentPhotoPath;
     static final int REQUEST_TAKE_PHOTO = 3;
     static final int PICK_FROM_ALBUM = 2;
+    Bitmap Bitimage;
 
     //final EditText textView1=findViewById(R.id.editText6_title);
     //final EditText textView2=findViewById(R.id.editText6_description);
@@ -107,7 +117,7 @@ public class Product_regist extends AppCompatActivity {
                             boolean success = jsonResponse.getBoolean("success");
                             if (success) {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(Product_regist.this);
-                                builder.setMessage("등록 완료!")
+                                builder.setMessage(mCurrentPhotoPath)
                                         .setPositiveButton("확인", new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialogInterface, int i) {
@@ -135,12 +145,19 @@ public class Product_regist extends AppCompatActivity {
 
                     }
                 };
-
-                BoardRegisterRequest boardRegisterRequest = new BoardRegisterRequest(boardTitle, boardContents, mCurrentPhotoPath, responseListener);
-                RequestQueue queue = Volley.newRequestQueue(Product_regist.this);
-                queue.add(boardRegisterRequest); //버튼 클릭시 roomRegisterRequest 실행
-
-
+                try {
+                    //ByteBuffer buffer= ByteBuffer.allocate(Bitimage.getByteCount());//바이트 버퍼를 이미지 사이즈 만큼 선언
+                    //Bitimage.copyPixelsToBuffer(buffer);//비트맵의 픽셀을 버퍼에 저장
+                    //byte[] byteArray = buffer.array(); //바이트 버퍼를 바이트배열로 변환
+                    byte[] image=imageToByteArray(mCurrentPhotoPath);
+                    //byte[] byteArray={1,1,2,2,3,3,3};
+                    BoardRegisterRequest boardRegisterRequest = new BoardRegisterRequest(boardTitle, boardContents, mCurrentPhotoPath, responseListener);
+                    RequestQueue queue = Volley.newRequestQueue(Product_regist.this);
+                    queue.add(boardRegisterRequest); //버튼 클릭시 roomRegisterRequest 실행
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(),"오류",Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -232,6 +249,7 @@ public class Product_regist extends AppCompatActivity {
                             default:
                                 rotatedBitmap = bitmap;
                         }
+                        Bitimage=rotatedBitmap;
                         imageView.setImageBitmap(rotatedBitmap);
                     }
                 }
@@ -347,5 +365,37 @@ public class Product_regist extends AppCompatActivity {
         Uri savingUri = Uri.fromFile(tempFile);
 
         Crop.of(photoUri, savingUri).asSquare().start(this);
+    }
+
+    public static byte[] imageToByteArray(String filePath)throws Exception{
+        byte[] returnValue=null;
+
+        ByteArrayOutputStream baos=null;
+        FileInputStream fis=null;
+
+        try {
+            baos= new ByteArrayOutputStream();
+            fis=new FileInputStream(filePath);
+
+            byte[] buf=new byte[1024];
+            int read=0;
+
+            while ((read=fis.read(buf,0,buf.length))!=-1){
+                baos.write(buf,0,read);
+            }
+            returnValue=baos.toByteArray();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        finally {
+            if (baos!=null){
+                baos.close();
+            }
+            if (fis!=null){
+                fis.close();
+            }
+        }
+        return returnValue;
     }
 }
