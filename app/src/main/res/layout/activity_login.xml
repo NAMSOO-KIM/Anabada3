@@ -64,29 +64,32 @@
                 android:textColorHint="#99000000"
                 android:textSize="22sp" />
 
-            <CheckBox
-                android:id="@+id/checkBox1"
-                android:layout_width="280dp"
+            <RadioGroup
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="15dp"
-                android:checked="true"
-                android:fontFamily="@font/dovemayo_bold"
-                android:padding="10dp"
-                android:text="회원"
-                android:textSize="18sp" />
-
-            <CheckBox
-                android:id="@+id/checkBox2"
-                android:layout_width="280dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="5dp"
-                android:fontFamily="@font/dovemayo_bold"
-                android:padding="10dp"
-                android:text="사회자"
-                android:textSize="18sp" />
-
+                android:layout_gravity="center">
+                <RadioButton
+                    android:id="@+id/checkBox1"
+                    android:layout_width="280dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="15dp"
+                    android:checked="true"
+                    android:fontFamily="@font/dovemayo_bold"
+                    android:padding="10dp"
+                    android:text="회원"
+                    android:textSize="18sp"/>
+                <RadioButton
+                    android:id="@+id/checkBox2"
+                    android:layout_width="280dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="5dp"
+                    android:fontFamily="@font/dovemayo_bold"
+                    android:padding="10dp"
+                    android:text="사회자"
+                    android:textSize="18sp"/>
+            </RadioGroup>
 
             <Button
                 android:id="@+id/gotomainButton"
@@ -96,7 +99,6 @@
                 android:layout_marginTop="50dp"
                 android:background="#FFE168"
                 android:fontFamily="@font/dovemayo_bold"
-                android:onClick="login"
                 android:text="로그인"
                 android:textColor="#000000"
                 android:textSize="24sp"

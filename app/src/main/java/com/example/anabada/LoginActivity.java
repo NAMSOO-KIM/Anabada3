@@ -5,9 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -69,20 +71,18 @@ public class LoginActivity extends AppCompatActivity {
 
                     }
                 };
-
-                RegisterRequest userRegisterRequest = new RegisterRequest(userName,responseListener);
-                RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);
-                queue.add(userRegisterRequest); //버튼 클릭시 roomRegisterRequest 실행
-
-
+                if (!TextUtils.isEmpty(idText.getText())){
+                    RegisterRequest userRegisterRequest = new RegisterRequest(userName,responseListener);
+                    RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);
+                    queue.add(userRegisterRequest); //버튼 클릭시 roomRegisterRequest 실행
+                }
+                else{
+                    Toast.makeText(getApplicationContext(),"이름이 필요합니다",Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
 
 
 
-    public void login(View view) {
-        Intent intent =new Intent(getApplicationContext(),MainActivity.class);
-        startActivity(intent);
-    }
 }
