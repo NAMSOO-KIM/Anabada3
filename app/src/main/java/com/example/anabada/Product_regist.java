@@ -61,6 +61,7 @@ public class Product_regist extends AppCompatActivity {
     static final int REQUEST_TAKE_PHOTO = 3;
     static final int PICK_FROM_ALBUM = 2;
     Bitmap Bitimage;
+    String mess;
 
     //final EditText textView1=findViewById(R.id.editText6_title);
     //final EditText textView2=findViewById(R.id.editText6_description);
@@ -117,7 +118,7 @@ public class Product_regist extends AppCompatActivity {
                             boolean success = jsonResponse.getBoolean("success");
                             if (success) {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(Product_regist.this);
-                                builder.setMessage(mCurrentPhotoPath)
+                                builder.setMessage(mess)
                                         .setPositiveButton("확인", new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialogInterface, int i) {
@@ -142,16 +143,17 @@ public class Product_regist extends AppCompatActivity {
                         {
                             e.printStackTrace();
                         }
-
                     }
                 };
                 try {
                     //ByteBuffer buffer= ByteBuffer.allocate(Bitimage.getByteCount());//바이트 버퍼를 이미지 사이즈 만큼 선언
                     //Bitimage.copyPixelsToBuffer(buffer);//비트맵의 픽셀을 버퍼에 저장
                     //byte[] byteArray = buffer.array(); //바이트 버퍼를 바이트배열로 변환
-                    byte[] image=imageToByteArray(mCurrentPhotoPath);
+                    //byte[] image=imageToByteArray(mCurrentPhotoPath);
+                    byte[] image=new byte[] {97,98,99};
+                    mess=new String(image);
                     //byte[] byteArray={1,1,2,2,3,3,3};
-                    BoardRegisterRequest boardRegisterRequest = new BoardRegisterRequest(boardTitle, boardContents, mCurrentPhotoPath, responseListener);
+                    BoardRegisterRequest boardRegisterRequest = new BoardRegisterRequest(boardTitle, boardContents, image, responseListener);
                     RequestQueue queue = Volley.newRequestQueue(Product_regist.this);
                     queue.add(boardRegisterRequest); //버튼 클릭시 roomRegisterRequest 실행
                 } catch (Exception e) {

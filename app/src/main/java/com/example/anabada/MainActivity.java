@@ -1,7 +1,10 @@
 package com.example.anabada;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
@@ -27,12 +30,15 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
     private FloatingActionButton fab;
     Boolean logout=true;
 
+    @SuppressLint("ResourceType")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,6 +89,10 @@ public class MainActivity extends AppCompatActivity
                 startActivity(intent);
             }
         });
+        /*final TextView username=(TextView) findViewById(R.id.username);
+        SharedPreferences auto = getSharedPreferences("auto", Activity.MODE_PRIVATE);
+        String user=auto.getString("inputname",null);
+        username.setText(10);*/
     }
 
     @Override
@@ -135,10 +145,15 @@ public class MainActivity extends AppCompatActivity
                     .setTitle("로그아웃").setMessage("로그아웃 하시겠습니까?")
                     .setPositiveButton("로그아웃", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
-                            Intent i = new Intent(MainActivity.this, LoginActivity.class);
-                            i.putExtra("logout",true);
-                            //i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                            startActivity(i);
+                            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                            startActivity(intent);
+                            SharedPreferences auto = getSharedPreferences("auto", Activity.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = auto.edit();
+                            //editor.clear()는 auto에 들어있는 모든 정보를 기기에서 지웁니다.
+                            editor.clear();
+                            editor.commit();
+                            Toast.makeText(getApplicationContext(), "로그아웃", Toast.LENGTH_SHORT).show();
+                            finish();
                         }
                     })
                     .setNegativeButton("취소", new DialogInterface.OnClickListener() {
@@ -149,7 +164,6 @@ public class MainActivity extends AppCompatActivity
                     .show();
 
         }
-
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
