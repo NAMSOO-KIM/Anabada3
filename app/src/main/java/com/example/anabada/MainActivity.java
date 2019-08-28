@@ -1,5 +1,6 @@
 package com.example.anabada;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import android.view.View;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -29,6 +31,7 @@ import android.widget.ListView;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
     private FloatingActionButton fab;
+    Boolean logout=true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,6 +131,22 @@ public class MainActivity extends AppCompatActivity
             Intent intent =new Intent(getApplicationContext(),Product_my.class);
             startActivity(intent);
         } else if (id == R.id.nav_logout) {
+            new AlertDialog.Builder(this/* 해당 액티비티를 가르킴 */)
+                    .setTitle("로그아웃").setMessage("로그아웃 하시겠습니까?")
+                    .setPositiveButton("로그아웃", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            Intent i = new Intent(MainActivity.this, LoginActivity.class);
+                            i.putExtra("logout",true);
+                            //i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                            startActivity(i);
+                        }
+                    })
+                    .setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+
+                        }
+                    })
+                    .show();
 
         }
 
