@@ -58,7 +58,7 @@
                 android:layout_marginTop="50dp"
                 android:background="#FFF5AD"
                 android:fontFamily="@font/dovemayo_bold"
-                android:hint="이름"
+                android:hint="이메일"
                 android:padding="10dp"
                 android:textColor="@color/colorPrimaryDark"
                 android:textColorHint="#99000000"
