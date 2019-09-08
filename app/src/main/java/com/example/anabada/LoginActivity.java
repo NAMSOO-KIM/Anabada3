@@ -13,6 +13,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
@@ -32,6 +34,9 @@ public class LoginActivity extends AppCompatActivity {
 //    Boolean logout=false;
     private static final String TAG="LoginActivity";
     private FirebaseAuth mAuth;
+    private RadioButton option_client;
+    private RadioButton option_server;
+    private RadioGroup radioGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +44,11 @@ public class LoginActivity extends AppCompatActivity {
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
         setContentView(R.layout.activity_login);
+
+        final RadioButton option_client=(RadioButton)findViewById(R.id.checkBox1);
+        final RadioButton option_server=(RadioButton)findViewById(R.id.checkBox2);
+        radioGroup=(RadioGroup)findViewById(R.id.radioGroup);
+
 
         findViewById(R.id.gotomainButton).setOnClickListener(onClickListener);//gotomain버튼 클릭시 로직
 
@@ -126,8 +136,8 @@ public class LoginActivity extends AppCompatActivity {
                                         .create()
                                         .show();
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-              LoginActivity.this.startActivity(intent);
-                break;
+                    LoginActivity.this.startActivity(intent);
+                    break;
 
             }
         }

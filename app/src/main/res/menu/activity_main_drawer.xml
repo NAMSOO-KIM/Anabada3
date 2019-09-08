@@ -13,6 +13,14 @@
             android:icon="@drawable/ic_menu_gallery"
             android:title="내가 올린 상품" />
         <item
+            android:id="@+id/server"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="server" />
+        <item
+            android:id="@+id/client"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="client" />
+        <item
             android:id="@+id/nav_logout"
             android:icon="@drawable/ic_menu_slideshow"
             android:title="로그아웃" />

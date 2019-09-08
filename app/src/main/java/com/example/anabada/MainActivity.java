@@ -164,6 +164,14 @@ public class MainActivity extends AppCompatActivity
                     .show();
 
         }
+        else if (id==R.id.server){
+            Intent intent =new Intent(getApplicationContext(),TCPServerActivity.class);
+            startActivity(intent);
+        }
+        else if (id==R.id.client){
+            Intent intent =new Intent(getApplicationContext(),TCPClientActivity.class);
+            startActivity(intent);
+        }
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
