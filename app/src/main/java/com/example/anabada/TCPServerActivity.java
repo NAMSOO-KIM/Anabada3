@@ -2,6 +2,8 @@ package com.example.anabada;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.text.Editable;
 import android.util.Log;
@@ -11,120 +13,137 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
 public class TCPServerActivity extends AppCompatActivity {
-    private TextView status;
-    private EditText trans_server_text;
-    private Button serverTransButton;//서버텍스트전송
-    private Button clientTransButton;//클라전송
-    private Button serverOutButton;
+    static final int PORT = 10001;
 
-    private TextView serverIpText;//서버아이피확인
-    private TextView serverText;//서버채팅창
-    private TextView clientText;//클라채팅창
-    private EditText joinIpText;//클라접속아이피
-    private EditText transServerText;
-    private EditText transClientText;
-    private ServerSocket serverSocket;
-    private Socket socket_cli;
+    ServerSocket serversocket;
+    Socket socket;
+
+    DataInputStream is;
+    DataOutputStream os;
+    TextView ip_text;
+    TextView text_msg; //클라이언트로부터 받을 메세지를 표시하는 TextView
+    EditText edit_msg; //클라이언트로 전송할 메세지를 작성하는 EditText
+    TextView status;
+
+    String msg = "";
+    boolean isConnected = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tcpserver);
 
+        text_msg = (TextView) findViewById(R.id.server_text);
+
+        edit_msg = (EditText) findViewById(R.id.edit_message_to_client);
+        ip_text=(TextView)findViewById(R.id.ip_text);
+        ip_text.setText(getLocalIpAddress());
         status=(TextView)findViewById(R.id.status);
-        serverTransButton = (Button) findViewById(R.id.trans_server_button);
-        clientTransButton = (Button) findViewById(R.id.trans_client_button);
-
-        serverText = (TextView) findViewById(R.id.server_text);
-        clientText = (TextView) findViewById(R.id.client_text);
-        transServerText = (EditText) findViewById(R.id.trans_server_text);
-        transClientText = (EditText) findViewById(R.id.client_server_text);
-
-        //serverTransButton.setOnClickListener(this);
-       // clientTransButton.setOnClickListener(this);
-
-
-        ServerThread thread = new ServerThread();
-        thread.start();
     }
 
+    //Button 클릭시 자동으로 호출되는 callback 메소드
+    public void mOnClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_start_server: //채팅 서버 구축 및 클라이언트로 부터 메세지 받기
 
+                //Android API14버전이상 부터 네트워크 작업은 무조건 별도의 Thread에서 실행 해야함.
+                new Thread(new Runnable() {
 
-    public void button(View view) {
-        ClientThread thread_ = new ClientThread();
-        thread_.start();
-        //status.setText("test");
-    }
+                    @Override
+                    public void run() {
+                        // TODO Auto-generated method stub
+                        try {
+                            //서버소켓 생성.
+                            serversocket = new ServerSocket(PORT);
+                        } catch (IOException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
 
-    class ServerThread extends Thread {
-        @Override
-        public void run() {
-            int port = 5001;
-            try {
-                ServerSocket server = new ServerSocket(port);
-                serverSocket =server;
-                status.setText("서버1");
+                        try {
+                            status.setText("서버 생성");
+                            //서버에 접속하는 클라이언트 소켓 얻어오기(클라이언트가 접속하면 클라이언트 소켓 리턴)
+                            socket = serversocket.accept(); //서버는 클라이언트가 접속할 때까지 여기서 대기...
+                            //여기 까지 왔다는 것은 클라이언트가 접속했다는 것을 의미하므로
+                            //클라이언트와 데이터를 주고 받기 위한 통로구축..
+                            is = new DataInputStream(socket.getInputStream()); //클라이언트로 부터 메세지를 받기 위한 통로
+                            os = new DataOutputStream(socket.getOutputStream()); //클라이언트로 메세지를 보내기 위한 통로
+                            status.setText("클라이언트 접속");
 
-                while(true){
-                    Socket socket = server.accept(); // server 대기상태. 클라이언트 접속 시 소켓 객체 리턴
+                        } catch (IOException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+                        //클라이언트가 접속을 끊을 때까지 무한반복하면서 클라이언트의 메세지 수신
+                        while (isConnected) {
+                            try {
+                                msg = is.readUTF();
+                            } catch (IOException e) {
+                                // TODO Auto-generated catch block
+                                e.printStackTrace();
+                            }
+                            //클라이언트로부터 읽어들인 메시지msg를 TextView에 출력..
+                            //안드로이드는 오직 main Thread 만이 UI를 변경할 수 있기에
+                            //네트워크 작업을 하는 이 Thread에서는 TextView의 글씨를 직접 변경할 수 없음
+                            //runOnUiThread()는 별도의 Thread가 main Thread에게 UI 작업을 요청하는 메소드임.
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    // TODO Auto-generated method stub
+                                    text_msg.setText("Client : "+msg);
+                                }
+                            });
+                            /////////////////////////////////////////////////////////////////////////////
+                        }//while..
+                    }//run method...
+                }).start(); //Thread 실행..
 
-                    ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream()); // 들어오는 데이터 처리
-                    //Object input = inputStream.readObject();
-                    final String get  = (String) inputStream.readObject();
-                    serverText.setText("Client : "+get);
+                break;
 
-                    Object input = (Object)transServerText.getText().toString();
-                    //Object input="fff";
-                    ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
-                    outputStream.writeObject(input); // 서버에서 보낸 데이터
-                    outputStream.flush();
-                    Log.d("ServerThread","output 보냄");
+            case R.id.btn_send_server: // 클라이언트로 메세지 전송하기.
+                if (os == null) return; //클라이언트와 연결되어 있지 않다면 전송불가..
 
-                    socket.close(); // 연결을 유지할 필요 없으면 끊어줌.
-                }
-            } catch (Exception e){
-                status.setText("오류");
-                e.printStackTrace();
-            }
+                //네트워크 작업이므로 Thread 생성
+                new Thread(new Runnable() {
+
+                    @Override
+                    public void run() {
+
+                        // TODO Auto-generated method stub
+                        //클라이언트로 보낼 메세지 EditText로 부터 얻어오기
+                        String msg = edit_msg.getText().toString();
+                        try {
+                            os.writeUTF(msg); //클라이언트로 메세지 보내기.UTF 방식으로(한글 전송가능...)
+                            os.flush();   //다음 메세지 전송을 위해 연결통로의 버퍼를 지워주는 메소드..
+                        } catch (IOException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+                    }
+                }).start(); //Thread 실행..
+                break;
         }
     }
 
-    class ClientThread extends Thread {
-        public void run() {
-            String host = "localhost";
-            String send;
-            int port = 5001;
-
-            try {
-
-                Socket socket = new Socket(host, port);
-                socket_cli=socket;
-                status.setText("서버연결");
-
-                Object msg = (Object)transClientText.getText().toString();
-                ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
-                outputStream.writeObject(msg);
-                outputStream.flush();
-                Log.d("ClientThread", "서버로 보냄.");
-
-                ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
-                final String input = (String) inputStream.readObject(); // Object로 받아도 무방
-                Log.d("ClientThread","받은 데이터 : "+input);
-
-                clientText.setText("Server : "+input);
-
-            } catch (Exception e) {
-                //status.setText("오류");
-                e.printStackTrace();
-            }
-        }
+    public String getLocalIpAddress() {
+        WifiManager wifiMgr = (WifiManager) getSystemService(WIFI_SERVICE);
+        WifiInfo wifiInfo = wifiMgr.getConnectionInfo();
+        int ip = wifiInfo.getIpAddress();
+        String ipAddress = String.format("%d.%d.%d.%d"
+                , (ip & 0xff)
+                , (ip >> 8 & 0xff)
+                , (ip >> 16 & 0xff)
+                , (ip >> 24 & 0xff));
+        return ipAddress;
     }
-
 
 }
