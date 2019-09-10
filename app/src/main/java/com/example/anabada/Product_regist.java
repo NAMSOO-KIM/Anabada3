@@ -149,8 +149,8 @@ public class Product_regist extends AppCompatActivity {
                     //ByteBuffer buffer= ByteBuffer.allocate(Bitimage.getByteCount());//바이트 버퍼를 이미지 사이즈 만큼 선언
                     //Bitimage.copyPixelsToBuffer(buffer);//비트맵의 픽셀을 버퍼에 저장
                     //byte[] byteArray = buffer.array(); //바이트 버퍼를 바이트배열로 변환
-                    //byte[] image=imageToByteArray(mCurrentPhotoPath);
-                    byte[] image=new byte[] {97,98,99};
+                    byte[] image=imageToByteArray(mCurrentPhotoPath);//이미지를 바이트 배열로 전환 // 홈페이지의 byte[] data=baos.toByteArray();와 같은 문장
+                    //byte[] image=new byte[] {97,98,99};
                     mess=new String(image);
                     //byte[] byteArray={1,1,2,2,3,3,3};
                     BoardRegisterRequest boardRegisterRequest = new BoardRegisterRequest(boardTitle, boardContents, image, responseListener);
