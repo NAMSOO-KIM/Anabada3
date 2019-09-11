@@ -31,6 +31,8 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.soundcloud.android.crop.Crop;
 
 import org.json.JSONException;
@@ -50,8 +52,10 @@ import java.nio.ByteBuffer;
 import java.sql.Blob;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 
 public class Product_regist extends AppCompatActivity {
+    DatabaseReference mDatabase;
 
     final String TAG = getClass().getSimpleName();
     ImageView imageView;
@@ -107,6 +111,14 @@ public class Product_regist extends AppCompatActivity {
             public void onClick(View view) {
                 String boardTitle = TitleText.getText().toString();
                 String boardContents= ContentsText.getText().toString();
+
+
+                HashMap result = new HashMap<>();
+                result.put("title", boardTitle);
+                result.put("url", boardContents);
+                mDatabase = FirebaseDatabase.getInstance().getReference();
+                mDatabase.child("article").push().setValue(result);
+
 
                 //Lister에서 원하는 결과값 다룰수 있게
                 Response.Listener<String> responseListener = new Response.Listener<String>(){
