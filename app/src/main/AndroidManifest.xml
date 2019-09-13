@@ -13,6 +13,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+
+        <activity android:name=".Member_register"></activity>
         <activity android:name=".ChatActivity"></activity>
         <activity android:name=".TCPServerActivity" />
         <activity android:name=".TCPClientActivity" />

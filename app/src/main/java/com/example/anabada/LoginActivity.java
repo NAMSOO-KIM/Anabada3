@@ -52,74 +52,6 @@ public class LoginActivity extends AppCompatActivity {
 
         findViewById(R.id.gotomainButton).setOnClickListener(onClickListener);//gotomain버튼 클릭시 로직
 
-//        final EditText idText = (EditText)findViewById(R.id.idText);
-//        final SharedPreferences auto=getSharedPreferences("auto", Activity.MODE_PRIVATE);
-//        loginname=auto.getString("inputname",null);
-//
-//        if (loginname!=null){
-//            Toast.makeText(getApplicationContext(), loginname +"님 자동로그인 입니다.", Toast.LENGTH_SHORT).show();
-//            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-//            LoginActivity.this.startActivity(intent);
-//        }
-//
-//        Button gotomainButton = (Button) findViewById(R.id.gotomainButton);
-//        gotomainButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                String userName = idText.getText().toString();
-//
-//                //Lister에서 원하는 결과값 다룰수 있게
-//                Response.Listener<String> responseListener = new Response.Listener<String>(){
-//
-//                    @Override
-//                    public void onResponse(String response) {
-//                        try {
-//                            JSONObject jsonResponse = new JSONObject(response);
-//                            boolean success = jsonResponse.getBoolean("success");
-//                            if (success) {
-//                                AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-//                                builder.setMessage("로그인 완료!")
-//                                        .setPositiveButton("확인", null)
-//                                        .create()
-//                                        .show();
-//
-//
-//                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-//                                LoginActivity.this.startActivity(intent);
-//                            }
-//
-//                            else{
-//                                AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-//                                builder.setMessage("로그인 실패!")
-//                                        .setNegativeButton("확인",null)
-//                                        .create()
-//                                        .show();
-//
-//                            }
-//
-//                        }
-//                        catch (JSONException e)
-//                        {
-//                            e.printStackTrace();
-//                        }
-//
-//                    }
-//                };
-//                if (!TextUtils.isEmpty(idText.getText())){
-//                    SharedPreferences.Editor autoLogin=auto.edit();
-//                    autoLogin.putString("inputname",idText.getText().toString());
-//                    autoLogin.commit();
-//
-//                    RegisterRequest userRegisterRequest = new RegisterRequest(userName,responseListener);
-//                    RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);
-//                    queue.add(userRegisterRequest); //버튼 클릭시 roomRegisterRequest 실행
-//                }
-//                else{
-//                    Toast.makeText(getApplicationContext(),"이름이 필요합니다",Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//        });
-//
 
     }
     View.OnClickListener onClickListener = new View.OnClickListener(){
@@ -145,9 +77,8 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
-//        updateUI(currentUser);
+
     }
     private void signUp(){
         String username = ((EditText)findViewById(R.id.idText)).getText().toString();
@@ -160,17 +91,20 @@ public class LoginActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                           //UI
+
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                            startToast(task.getException().toString());
 
-                          //UI
                         }
 
-                        // ...
                     }
                 });
     }
+    private void startToast(String msg) {
+        Toast.makeText(this,msg,Toast.LENGTH_SHORT).show();
+    }
+
 
 }
