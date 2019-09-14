@@ -39,5 +39,6 @@ dependencies {
     apply plugin: 'com.google.gms.google-services'
     implementation 'com.google.firebase:firebase-messaging:19.0.1'
     implementation 'com.google.firebase:firebase-firestore:21.1.0'
+    implementation 'com.google.firebase:firebase-storage:18.1.1'
 
 }

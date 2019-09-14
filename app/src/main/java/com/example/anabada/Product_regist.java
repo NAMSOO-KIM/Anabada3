@@ -7,6 +7,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -19,43 +20,42 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.toolbox.Volley;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.soundcloud.android.crop.Crop;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.DatagramPacket;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLEncoder;
-import java.nio.ByteBuffer;
-import java.sql.Blob;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 
 public class Product_regist extends AppCompatActivity {
+   // private ImageView boardImageVIew;
+     private FirebaseUser user;
+
     DatabaseReference mDatabase;
+    private String boardPath; //사진 주소
 
     final String TAG = getClass().getSimpleName();
     ImageView imageView;
@@ -66,9 +66,6 @@ public class Product_regist extends AppCompatActivity {
     static final int PICK_FROM_ALBUM = 2;
     Bitmap Bitimage;
     String mess;
-
-    //final EditText textView1=findViewById(R.id.editText6_title);
-    //final EditText textView2=findViewById(R.id.editText6_description);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,85 +90,18 @@ public class Product_regist extends AppCompatActivity {
             }
         }
 
-        /*Intent intent=getIntent();
-        String title=intent.getStringExtra("title");
-        String desc=intent.getStringExtra("desc");
-
-        textView1.setText(title);
-        textView2.setText(desc);*/
-
-        //idText 는 방 제목
-        //passwordText 는 방 비밀번호
-        final EditText TitleText = (EditText)findViewById(R.id.editText6_title);
-        final EditText ContentsText = (EditText)findViewById(R.id.editText6_description);
-
-        Button BoardRegisterButton = (Button) findViewById(R.id.button6_registration);
+        Button BoardRegisterButton = (Button) findViewById(R.id.board_register);
         BoardRegisterButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                String boardTitle = TitleText.getText().toString();
-                String boardContents= ContentsText.getText().toString();
+            public void onClick(View v) {
 
-
-                HashMap result = new HashMap<>();
-                result.put("title", boardTitle);
-                result.put("url", boardContents);
-                mDatabase = FirebaseDatabase.getInstance().getReference();
-                mDatabase.child("article").push().setValue(result);
-
-
-                //Lister에서 원하는 결과값 다룰수 있게
-                Response.Listener<String> responseListener = new Response.Listener<String>(){
-
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONObject jsonResponse = new JSONObject(response);
-                            boolean success = jsonResponse.getBoolean("success");
-                            if (success) {
-                                AlertDialog.Builder builder = new AlertDialog.Builder(Product_regist.this);
-                                builder.setMessage(mess)
-                                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialogInterface, int i) {
-                                                Intent intent = new Intent(Product_regist.this, MainActivity.class);
-                                                Product_regist.this.startActivity(intent);
-                                            }
-                                        })
-                                        .show();
-                            }
-
-                            else{
-                                AlertDialog.Builder builder = new AlertDialog.Builder(Product_regist.this);
-                                builder.setMessage("등록 실패!")
-                                        .setNegativeButton("확인",null)
-                                        .create()
-                                        .show();
-
-                            }
-
-                        }
-                        catch (JSONException e)
-                        {
-                            e.printStackTrace();
-                        }
-                    }
-                };
-                try {
-                    //ByteBuffer buffer= ByteBuffer.allocate(Bitimage.getByteCount());//바이트 버퍼를 이미지 사이즈 만큼 선언
-                    //Bitimage.copyPixelsToBuffer(buffer);//비트맵의 픽셀을 버퍼에 저장
-                    //byte[] byteArray = buffer.array(); //바이트 버퍼를 바이트배열로 변환
-                    byte[] image=imageToByteArray(mCurrentPhotoPath);//이미지를 바이트 배열로 전환 // 홈페이지의 byte[] data=baos.toByteArray();와 같은 문장
-                    //byte[] image=new byte[] {97,98,99};
-                    mess=new String(image);
-                    //byte[] byteArray={1,1,2,2,3,3,3};
-                    BoardRegisterRequest boardRegisterRequest = new BoardRegisterRequest(boardTitle, boardContents, image, responseListener);
-                    RequestQueue queue = Volley.newRequestQueue(Product_regist.this);
-                    queue.add(boardRegisterRequest); //버튼 클릭시 roomRegisterRequest 실행
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Toast.makeText(getApplicationContext(),"오류",Toast.LENGTH_SHORT).show();
+                switch (v.getId()){
+                    case R.id.board_register:
+                        boardUpdate();
+                        break;
                 }
+
+
             }
         });
 
@@ -187,24 +117,19 @@ public class Product_regist extends AppCompatActivity {
         }
     }
 
+
+
     // 카메라로 촬영한 영상을 가져오는 부분
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
         switch (requestCode) {
             case TAKE_PICTURE:
-                if (resultCode == RESULT_OK) {
-                    File file=new File(mCurrentPhotoPath);
-                    Bitmap bitmap = null;
-                    try {
-                        bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), Uri.fromFile(file));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    if (bitmap != null) {
-                        imageView.setImageBitmap(bitmap);
-                    }
 
+                if (resultCode == Activity.RESULT_OK) { //Activity. <-으로 변경
+                    mCurrentPhotoPath = intent.getStringExtra("mCurrentPhotoPath");
+                    Bitmap bmp = BitmapFactory.decodeFile(mCurrentPhotoPath);
+                    imageView.setImageBitmap(bmp);
                 }
                 break;
             case PICK_FROM_ALBUM:
@@ -412,4 +337,98 @@ public class Product_regist extends AppCompatActivity {
         }
         return returnValue;
     }
+
+    //글 등록하기
+    private void boardUpdate() {
+        final String boardTitle = ((EditText) findViewById(R.id.boardTitle)).getText().toString();
+        final String boardDescription = ((EditText) findViewById(R.id.boardDescription)).getText().toString();
+        final String jpgName ="/"+ boardTitle+".jpg";
+        if (boardTitle.length() > 0 && boardDescription.length() > 0) {
+
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            StorageReference storageRef = storage.getReference();
+            user = FirebaseAuth.getInstance().getCurrentUser();
+            //final StorageReference mountainImagesRef = storageRef.child("board/" + user.getUid() + "/boardImage.jpg");
+            final StorageReference mountainImagesRef = storageRef.child("board/" + user.getUid() + jpgName);
+
+
+            if (mCurrentPhotoPath == null) {
+                Boardinfo boardinfo = new Boardinfo(user, boardTitle, boardDescription);
+                uploader(boardinfo);
+            } else {
+
+                try {
+                    InputStream stream = new FileInputStream(new File(mCurrentPhotoPath));
+                    UploadTask uploadTask = mountainImagesRef.putStream(stream);
+                    uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                        @Override
+                        public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                            if (!task.isSuccessful()) {
+                                throw task.getException();
+                            }
+                            return mountainImagesRef.getDownloadUrl();
+                        }
+                    }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Uri> task) {
+                            if (task.isSuccessful()) {
+                                Uri downloadUri = task.getResult();
+                                FirebaseFirestore db = FirebaseFirestore.getInstance();
+//                            final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+                                Boardinfo boardinfo = new Boardinfo(user, boardTitle, boardDescription, downloadUri.toString());
+                                db.collection("board").document(user.getUid()).set(boardinfo)
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                startToast("게시글 등록을 성공하였습니다.");
+                                                finish();
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                startToast("게시글 등록에 실패하였습니다.");
+                                                Log.w(TAG, "Error writing document", e);
+                                            }
+                                        });
+                            } else {
+                                Log.e("로그", "실패");
+                            }
+                        }
+                    });
+                } catch (FileNotFoundException e) {
+                    Log.e("로그", "에러: " + e.toString());
+                }
+            }
+        }else {
+            startToast("게시글을 입력해주세요.");
+        }
+    }
+
+
+
+    private void startToast(String msg) {
+        Toast.makeText(this,msg,Toast.LENGTH_SHORT).show();
+    }
+    private void uploader(Boardinfo boardinfo){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("board").document(user.getUid()).set(boardinfo)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        startToast("게시글 등록을 성공하였습니다.");
+                        finish();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        startToast("게시글 등록에 실패하였습니다.");
+                        Log.w(TAG, "Error writing document", e);
+                    }
+                });
+    }
 }
+
+

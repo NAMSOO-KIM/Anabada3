@@ -51,7 +51,7 @@
             android:textSize="30sp" />
 
         <EditText
-            android:id="@+id/editText6_title"
+            android:id="@+id/boardTitle"
             android:layout_width="277dp"
             android:layout_height="wrap_content"
             android:fontFamily="@font/dovemayo_bold"
@@ -69,7 +69,7 @@
         android:textSize="30sp" />
 
     <EditText
-        android:id="@+id/editText6_description"
+        android:id="@+id/boardDescription"
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:fontFamily="@font/dovemayo_bold"
@@ -92,7 +92,7 @@
             android:layout_weight="1" />
 
         <Button
-            android:id="@+id/button6_registration"
+            android:id="@+id/board_register"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
