@@ -222,6 +222,22 @@ public class MainActivity extends AppCompatActivity
             Intent intent =new Intent(getApplicationContext(),TCPClientActivity.class);
             startActivity(intent);
         }
+        else if (id==R.id.game1){
+            Intent intent =new Intent(getApplicationContext(),PressGameActivity.class);
+            startActivity(intent);
+        }
+        else if (id==R.id.game2){
+            Intent intent =new Intent(getApplicationContext(),CalculatorGameActivity.class);
+            startActivity(intent);
+        }
+        else if (id==R.id.game3){
+            Intent intent =new Intent(getApplicationContext(),TCPClientActivity.class);
+            startActivity(intent);
+        }
+        else if (id==R.id.game4){
+            Intent intent =new Intent(getApplicationContext(),TCPClientActivity.class);
+            startActivity(intent);
+        }
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
