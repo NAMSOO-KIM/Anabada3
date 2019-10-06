@@ -3,29 +3,17 @@ package com.example.anabada;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.view.Display;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.util.Random;
-
-public class GameBacteriaActivity extends AppCompatActivity implements View.OnClickListener{
+public class HeartPressActivity extends AppCompatActivity implements View.OnClickListener{
     ProgressBar mProgressBar;
     TextView mTextView_progress;
     Boolean IsRunning;
@@ -38,13 +26,13 @@ public class GameBacteriaActivity extends AppCompatActivity implements View.OnCl
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_game_bacteria);
+        setContentView(R.layout.activity_heart_press);
 
-        /*mProgressBar = (ProgressBar)findViewById(R.id.progressBar_bc);
+        mProgressBar = (ProgressBar)findViewById(R.id.progressBar_bc);
         mTextView_progress = (TextView) findViewById(R.id.textView_progress_bc);
-        mHandler_progress = new ProgressHandler();*/
+        mHandler_progress = new ProgressHandler();
 
-        /*mButton[0] = (ImageView) findViewById(R.id.imageView1);
+        mButton[0] = (ImageView) findViewById(R.id.imageView1);
         mButton[1] = (ImageView) findViewById(R.id.imageView2);
         mButton[2] = (ImageView) findViewById(R.id.imageView3);
         mButton[3] = (ImageView) findViewById(R.id.imageView4);
@@ -65,24 +53,13 @@ public class GameBacteriaActivity extends AppCompatActivity implements View.OnCl
         mButton[18] = (ImageView) findViewById(R.id.imageView19);
         mButton[19] = (ImageView) findViewById(R.id.imageView20);
 
-        //Toast.makeText(getApplicationContext(),"하트를 없애질 때까지 눌러주세요",Toast.LENGTH_LONG).show();
-        /*for (int i = 0; i < 20; i++){
+        for (int i = 0; i < 20; i++){
             health[i]=0;
-        }*/
-        /*int[] number_random = new int[20];
-        for (int i = 0; i < 20; i++)
-            number_random[i] = i + 1;
-        Random r = new Random(System.currentTimeMillis());
-        for (int i = 0, n = r.nextInt(100); i < n; ++i) {
-            int index1 = r.nextInt(20);
-            int index2 = r.nextInt(20);
-            int temp = number_random[index1];
-            number_random[index1] = number_random[index2];
-            number_random[index2] = temp;
         }
+
         for (int i = 0; i < 20; i++) {
             mButton[i].setOnClickListener(this);
-        }*/
+        }
     }
 
     public class ProgressHandler extends Handler {
@@ -101,7 +78,7 @@ public class GameBacteriaActivity extends AppCompatActivity implements View.OnCl
 
     public void onStart(){
         super.onStart();
-        /*current_number = 20;
+        current_number = 20;
         mProgressBar.setProgress(0);
         Thread mThread1 = new Thread(new Runnable(){
             public void run(){
@@ -119,7 +96,7 @@ public class GameBacteriaActivity extends AppCompatActivity implements View.OnCl
             }
         });
         IsRunning = true;
-        mThread1.start();*/
+        mThread1.start();
     }
 
     public void onStop(){
