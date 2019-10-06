@@ -8,6 +8,7 @@ import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,6 +24,7 @@ public class PressGameActivity extends AppCompatActivity implements View.OnClick
     ProgressHandler mHandler_progress;
 
     private Button[] mButton = new Button[20];
+    private ImageView[] imv=new ImageView[20];
     private int current_number;
 
     @Override
