@@ -231,7 +231,7 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
         }
         else if (id==R.id.game3){
-            Intent intent =new Intent(getApplicationContext(),TCPClientActivity.class);
+            Intent intent =new Intent(getApplicationContext(),QuizGameActivity.class);
             startActivity(intent);
         }
         else if (id==R.id.game4){

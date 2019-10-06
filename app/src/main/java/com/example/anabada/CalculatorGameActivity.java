@@ -8,8 +8,10 @@ import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -23,6 +25,7 @@ public class CalculatorGameActivity extends AppCompatActivity {
     TextView ctextview;
     int a,b;
     Random rnd;
+    EditText calc;
 
     private Button[] mButton = new Button[16];
     private int current_number;
@@ -34,9 +37,11 @@ public class CalculatorGameActivity extends AppCompatActivity {
 
         mProgressBar = (ProgressBar)findViewById(R.id.progressBar_timer_clac);
         mTextView_progress = (TextView) findViewById(R.id.textView_progress_clac);
-        //mHandler_progress = new ProgressHandler();
+        mHandler_progress = new ProgressHandler();
+        ctextview=(TextView) findViewById(R.id.textView_calc);
+        calc=(EditText)findViewById(R.id.calc);
 
-        TextView ctextview=(TextView) findViewById(R.id.textView_calc);
+        Toast.makeText(getApplicationContext(),"사칙연산을 빠르게 계산해주세요",Toast.LENGTH_LONG).show();
 
 
     }
@@ -59,6 +64,7 @@ public class CalculatorGameActivity extends AppCompatActivity {
         super.onStart();
         current_number = 1;
         mProgressBar.setProgress(0);
+        rndNum();
         Thread mThread1 = new Thread(new Runnable(){
             public void run(){
                 try{
@@ -71,6 +77,7 @@ public class CalculatorGameActivity extends AppCompatActivity {
                 }
                 catch(Exception ex){
                     Log.e("MainActivity", "Exception in processing message.", ex);
+                    ctextview.setText("오류");
                 }
             }
         });
@@ -86,11 +93,13 @@ public class CalculatorGameActivity extends AppCompatActivity {
     public void onClick(View v){
         //클릭한 버튼을 받아옴
         Button mButton_Click = (Button) v;
-        if(current_number == Integer.parseInt(String.valueOf(mButton_Click.getText()))){
-            mButton_Click.setBackgroundColor(0x66FF0000);
+        String str=calc.getText().toString();
+        int res=Integer.parseInt(str);
+        if(res==a+b){
             current_number++;
+            rndNum();
         }
-        if(current_number == 17) {
+        if(current_number == 5) {
             IsRunning = false;
             AlertDialog mDialog = createDialogBox();
             mDialog.show();
@@ -111,5 +120,12 @@ public class CalculatorGameActivity extends AppCompatActivity {
         AlertDialog mAlertDialog = mBuilder.create();
         return mAlertDialog;
     } // 점수 창 뜨기 구현
+
+    public void rndNum(){
+        rnd=new Random();
+        a=rnd.nextInt(100);
+        b=rnd.nextInt(100);
+        ctextview.setText(a+"+"+b);
+    }
 
 }

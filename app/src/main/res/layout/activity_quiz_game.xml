@@ -5,12 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".CalculatorGameActivity">
+    tools:context=".QuizGameActivity">
 
     <TextView
-        android:id="@+id/textView_calc"
+        android:id="@+id/textView_qz"
         android:layout_width="match_parent"
-        android:layout_height="139dp"
+        android:layout_height="192dp"
         android:background="#9CE91EB6"
         android:gravity="center"
         android:textColor="#2a3235"
@@ -22,7 +22,7 @@
         android:layout_height="48dp" />
 
     <ProgressBar
-        android:id="@+id/progressBar_timer_clac"
+        android:id="@+id/progressBar_timer_qz"
         style="@android:style/Widget.ProgressBar.Horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -30,12 +30,29 @@
         android:progress="50" />
 
     <TextView
-        android:id="@+id/textView_progress_clac"
+        android:id="@+id/textView_progress_qz"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textAlignment="center"
         android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/textView_qz_hint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/textView_qz_ex"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:textSize="30sp"
+        android:text="틀릴때마다 10초씩 늘어나니 신중하게 선택해주세요!!"/>
 
     <LinearLayout
         android:layout_width="310dp"
@@ -43,7 +60,7 @@
         android:orientation="horizontal">
 
         <EditText
-            android:id="@+id/calc"
+            android:id="@+id/quiz_ex"
             android:layout_width="165dp"
             android:layout_height="wrap_content"></EditText>
 
@@ -55,6 +72,7 @@
             android:text="확인" />
 
     </LinearLayout>
+
 
 
 

@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -21,7 +22,7 @@ public class PressGameActivity extends AppCompatActivity implements View.OnClick
     Boolean IsRunning;
     ProgressHandler mHandler_progress;
 
-    private Button[] mButton = new Button[16];
+    private Button[] mButton = new Button[20];
     private int current_number;
 
     @Override
@@ -49,19 +50,25 @@ public class PressGameActivity extends AppCompatActivity implements View.OnClick
         mButton[13] = (Button) findViewById(R.id.button14);
         mButton[14] = (Button) findViewById(R.id.button15);
         mButton[15] = (Button) findViewById(R.id.button16);
+        mButton[16] = (Button) findViewById(R.id.button17);
+        mButton[17] = (Button) findViewById(R.id.button18);
+        mButton[18] = (Button) findViewById(R.id.button19);
+        mButton[19] = (Button) findViewById(R.id.button20);
 
-        int[] number_random = new int[16];
-        for (int i = 0; i < 16; i++)
+        Toast.makeText(getApplicationContext(),"숫자를 1부터 20까지 순서대로  빠르게 눌러주세요",Toast.LENGTH_LONG).show();
+
+        int[] number_random = new int[20];
+        for (int i = 0; i < 20; i++)
             number_random[i] = i + 1;
         Random r = new Random(System.currentTimeMillis());
         for (int i = 0, n = r.nextInt(100); i < n; ++i) {
-            int index1 = r.nextInt(15);
-            int index2 = r.nextInt(15);
+            int index1 = r.nextInt(20);
+            int index2 = r.nextInt(20);
             int temp = number_random[index1];
             number_random[index1] = number_random[index2];
             number_random[index2] = temp;
         }
-        for (int i = 0; i < 16; i++) {
+        for (int i = 0; i < 20; i++) {
             mButton[i].setOnClickListener(this);
             mButton[i].setText(Integer.toString(number_random[i]));
         }
@@ -116,7 +123,7 @@ public class PressGameActivity extends AppCompatActivity implements View.OnClick
             mButton_Click.setBackgroundColor(0x66FF0000);
             current_number++;
         }
-        if(current_number == 17) {
+        if(current_number == 21) {
             IsRunning = false;
             AlertDialog mDialog = createDialogBox();
             mDialog.show();
