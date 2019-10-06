@@ -15,7 +15,6 @@
         <activity android:name=".QuizGameActivity"></activity>
         <activity android:name=".CalculatorGameActivity" />
         <activity android:name=".PressGameActivity" />
-        <activity android:name=".GameBacteriaActivity" />
         <activity android:name=".Member_register" />
         <activity android:name=".ChatActivity" />
         <activity android:name=".TCPServerActivity" />
