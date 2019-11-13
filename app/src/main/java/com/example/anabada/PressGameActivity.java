@@ -15,6 +15,13 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Exclude;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.IgnoreExtraProperties;
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 public class PressGameActivity extends AppCompatActivity implements View.OnClickListener{
@@ -22,10 +29,14 @@ public class PressGameActivity extends AppCompatActivity implements View.OnClick
     TextView mTextView_progress;
     Boolean IsRunning;
     ProgressHandler mHandler_progress;
+    private DatabaseReference mPostReference;
 
     private Button[] mButton = new Button[20];
     private ImageView[] imv=new ImageView[20];
     private int current_number;
+    String name="yang";
+    long score;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,6 +140,8 @@ public class PressGameActivity extends AppCompatActivity implements View.OnClick
             IsRunning = false;
             AlertDialog mDialog = createDialogBox();
             mDialog.show();
+            score=(mProgressBar.getProgress());
+            postFirebaseDatabase(true);
         }
     } // 버튼 클릭할 때 색 바뀌기 & 다 누르면 점수 창 뜨기
 
@@ -146,5 +159,40 @@ public class PressGameActivity extends AppCompatActivity implements View.OnClick
         AlertDialog mAlertDialog = mBuilder.create();
         return mAlertDialog;
     } // 점수 창 뜨기 구현
+
+    @IgnoreExtraProperties
+    public class FirebasePost {
+        public Long score;
+        public String name;
+
+        public FirebasePost(){
+            // Default constructor required for calls to DataSnapshot.getValue(FirebasePost.class)
+        }
+
+        public FirebasePost(String name, Long score) {
+            this.score = score;
+            this.name = name;
+        }
+
+        @Exclude
+        public Map<String, Object> toMap() {
+            HashMap<String, Object> result = new HashMap<>();
+            result.put("name", name);
+            result.put("score", score);
+            return result;
+        }
+    }
+
+    public void postFirebaseDatabase(boolean add){
+        mPostReference = FirebaseDatabase.getInstance().getReference();
+        Map<String, Object> childUpdates = new HashMap<>();
+        Map<String, Object> postValues = null;
+        if(add){
+            FirebasePost post = new FirebasePost(name, score);
+            postValues = post.toMap();
+        }
+        childUpdates.put("/id_list/" + name, postValues);
+        mPostReference.updateChildren(childUpdates);
+    }
 
 }
