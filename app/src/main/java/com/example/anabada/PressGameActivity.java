@@ -2,6 +2,7 @@ package com.example.anabada;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -15,6 +16,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.FirebaseError;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.FirebaseDatabase;
@@ -29,12 +33,12 @@ public class PressGameActivity extends AppCompatActivity implements View.OnClick
     TextView mTextView_progress;
     Boolean IsRunning;
     ProgressHandler mHandler_progress;
-    private DatabaseReference mPostReference;
-
+    private DatabaseReference mDatabase;
     private Button[] mButton = new Button[20];
     private ImageView[] imv=new ImageView[20];
     private int current_number;
-    String name="yang";
+    String name="dong";
+    String username;
     long score;
 
 
@@ -46,6 +50,13 @@ public class PressGameActivity extends AppCompatActivity implements View.OnClick
         mProgressBar = (ProgressBar)findViewById(R.id.progressBar_timer);
         mTextView_progress = (TextView) findViewById(R.id.textView_progress);
         mHandler_progress = new ProgressHandler();
+
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            // Name, email address, and profile photo Url
+            username = user.getUid();
+        }
 
         mButton[0] = (Button) findViewById(R.id.button1);
         mButton[1] = (Button) findViewById(R.id.button2);
@@ -138,21 +149,23 @@ public class PressGameActivity extends AppCompatActivity implements View.OnClick
         }
         if(current_number == 21) {
             IsRunning = false;
+            score=(long)mProgressBar.getProgress();
             AlertDialog mDialog = createDialogBox();
             mDialog.show();
-            score=(mProgressBar.getProgress());
-            postFirebaseDatabase(true);
+            //postFirebaseDatabase(true);
         }
     } // 버튼 클릭할 때 색 바뀌기 & 다 누르면 점수 창 뜨기
 
     public AlertDialog createDialogBox(){
         AlertDialog.Builder mBuilder = new AlertDialog.Builder(this);
         mBuilder.setTitle("게임 종료");
-        mBuilder.setMessage("걸린시간: "+(mProgressBar.getProgress()));
+        mBuilder.setMessage("걸린시간: "+(mProgressBar.getProgress())+"name : "+username);
 
         mBuilder.setPositiveButton("등수 확인", new DialogInterface.OnClickListener(){
             public void onClick(DialogInterface dialog, int which){
-
+                postFirebaseDatabase(true);
+                Intent intent =new Intent(getApplicationContext(),ScoreActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -184,15 +197,14 @@ public class PressGameActivity extends AppCompatActivity implements View.OnClick
     }
 
     public void postFirebaseDatabase(boolean add){
-        mPostReference = FirebaseDatabase.getInstance().getReference();
         Map<String, Object> childUpdates = new HashMap<>();
         Map<String, Object> postValues = null;
         if(add){
-            FirebasePost post = new FirebasePost(name, score);
+            FirebasePost post = new FirebasePost(username, score);
             postValues = post.toMap();
         }
-        childUpdates.put("/id_list/" + name, postValues);
-        mPostReference.updateChildren(childUpdates);
+        childUpdates.put("/id_list/" + username, postValues);
+        mDatabase.updateChildren(childUpdates);
     }
 
 }
