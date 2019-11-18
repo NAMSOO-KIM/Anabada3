@@ -40,6 +40,8 @@ public class PressGameActivity extends AppCompatActivity implements View.OnClick
     String name="dong";
     String username;
     long score;
+    static FirebasePost post;
+    static  Map<String, Object> postValues = null;
 
 
     @Override
@@ -198,9 +200,9 @@ public class PressGameActivity extends AppCompatActivity implements View.OnClick
 
     public void postFirebaseDatabase(boolean add){
         Map<String, Object> childUpdates = new HashMap<>();
-        Map<String, Object> postValues = null;
+
         if(add){
-            FirebasePost post = new FirebasePost(username, score);
+            post = new FirebasePost(username, score);
             postValues = post.toMap();
         }
         childUpdates.put("/id_list/" + username, postValues);
