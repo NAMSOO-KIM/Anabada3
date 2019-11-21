@@ -62,6 +62,7 @@ public class LoginActivity extends AppCompatActivity {
             {
                 case R.id.gotomainButton:
                     signUp();
+                    Log.w(TAG, "signUp done");
                     AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
                                 builder.setMessage("로그인 완료!")
                                         .setPositiveButton("확인", null)
@@ -83,13 +84,14 @@ public class LoginActivity extends AppCompatActivity {
     private void signUp(){
         String username = ((EditText)findViewById(R.id.idText)).getText().toString();
         String password = ((EditText)findViewById(R.id.idText)).getText().toString();
+        Log.w(TAG, "name pass");
         mAuth.createUserWithEmailAndPassword(username, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "createUserWithEmail:success");
+                            Log.w(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
 
                         } else {
@@ -98,9 +100,11 @@ public class LoginActivity extends AppCompatActivity {
                             startToast(task.getException().toString());
 
                         }
-
                     }
                 });
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        Log.w(TAG, user.getUid());
+        Log.w(TAG, "create done");
     }
     private void startToast(String msg) {
         Toast.makeText(this,msg,Toast.LENGTH_SHORT).show();

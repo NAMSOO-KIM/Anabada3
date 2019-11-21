@@ -1,5 +1,6 @@
 package com.example.anabada;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -7,6 +8,8 @@ import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -15,6 +18,9 @@ import com.google.firebase.database.Exclude;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,7 +52,9 @@ public class ScoreActivity extends AppCompatActivity {
 
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, new ArrayList<String>());
         listView.setAdapter(adapter);
+
         basicQuery();
+
 
         /*mReference = mDatabase.getReference("id_list"); // 변경값을 확인할 child 이름
         mReference.addValueEventListener(new ValueEventListener() {
@@ -93,7 +101,6 @@ public class ScoreActivity extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {
 
             }
-            public void 
         });
     }
 
@@ -178,6 +185,20 @@ public class ScoreActivity extends AppCompatActivity {
             }
         }
         return text;
+    }
+
+    public class FirebaseName {
+        public Long score;
+        public String name;
+
+        public FirebaseName(){
+            // Default constructor required for calls to DataSnapshot.getValue(FirebasePost.class)
+        }
+
+        public FirebaseName(String name, Long score) {
+            this.score = score;
+            this.name = name;
+        }
     }
 
 }

@@ -14,8 +14,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseError;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -23,6 +26,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.IgnoreExtraProperties;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,10 +44,12 @@ public class PressGameActivity extends AppCompatActivity implements View.OnClick
     private ImageView[] imv=new ImageView[20];
     private int current_number;
     String name="dong";
-    String username;
+    private String username;
+    private String userID;
     long score;
     static FirebasePost post;
     static  Map<String, Object> postValues = null;
+    private static final String TAG = "DocSnippets";
 
 
     @Override
@@ -57,8 +65,9 @@ public class PressGameActivity extends AppCompatActivity implements View.OnClick
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             // Name, email address, and profile photo Url
-            username = user.getUid();
+            userID = user.getUid();
         }
+        getDocument();
 
         mButton[0] = (Button) findViewById(R.id.button1);
         mButton[1] = (Button) findViewById(R.id.button2);
@@ -161,7 +170,7 @@ public class PressGameActivity extends AppCompatActivity implements View.OnClick
     public AlertDialog createDialogBox(){
         AlertDialog.Builder mBuilder = new AlertDialog.Builder(this);
         mBuilder.setTitle("게임 종료");
-        mBuilder.setMessage("걸린시간: "+(mProgressBar.getProgress())+"name : "+username);
+        mBuilder.setMessage("걸린시간: "+(mProgressBar.getProgress())+"name : "+userID);
 
         mBuilder.setPositiveButton("등수 확인", new DialogInterface.OnClickListener(){
             public void onClick(DialogInterface dialog, int which){
@@ -207,6 +216,29 @@ public class PressGameActivity extends AppCompatActivity implements View.OnClick
         }
         childUpdates.put("/id_list/" + username, postValues);
         mDatabase.updateChildren(childUpdates);
+        Log.d(TAG, "postFirebase: " + username);
+    }
+
+    public void getDocument() {
+        // [START get_document]
+        DocumentReference docRef = FirebaseFirestore.getInstance().collection("users").document(userID);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        username= (String) document.get("name");
+                        Log.d(TAG, "DocumentSnapshot data: " + username);
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+        // [END get_document]
     }
 
 }

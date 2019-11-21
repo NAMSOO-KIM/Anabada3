@@ -71,25 +71,18 @@ public class MainActivity extends AppCompatActivity
                         DocumentSnapshot document = task.getResult();
                         if(document != null){
                             if (document.exists()) {
-                                Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                                Log.w(TAG, "DocumentSnapshot data: " + document.getData());
                             } else {
-                                Log.d(TAG, "No such document");
+                                Log.w(TAG, "No such document");
                                 myStartActivity(Member_register.class);
                             }
                         }
                     } else {
-                        Log.d(TAG, "get failed with ", task.getException());
+                        Log.w(TAG, "get failed with ", task.getException());
                     }
                 }
             });
-
-
-//
-//                    }
-//                }
-//            }
         }
-
 
 
 
