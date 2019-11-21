@@ -30,6 +30,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -47,6 +49,10 @@ public class MainActivity extends AppCompatActivity
     private static final String TAG="MainActivity";
     private FloatingActionButton fab;
     Boolean logout=true;
+    private FirebaseFirestore db;
+    private static final String TAGDoc = "DocSnippets";
+    ListView listView;
+    ListViewAdapter adapter;
 
     @SuppressLint("ResourceType")
     @Override
@@ -56,6 +62,7 @@ public class MainActivity extends AppCompatActivity
 
         //파이어 베이스 유저
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        db=FirebaseFirestore.getInstance();
 
         //유저 없으면 사용자 정보 등록화면으로 전환
         if(user == null){
@@ -104,12 +111,11 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
 
-        ListView listView;
-        ListViewAdapter adapter;
 
         adapter=new ListViewAdapter();
         listView =(ListView)findViewById(R.id.ProductList);
-        listView.setAdapter(adapter);
+        getAllUsers();
+
 
         adapter.addItem(ContextCompat.getDrawable(this,R.drawable.ic_menu_camera),"camera","camera");
         adapter.addItem(ContextCompat.getDrawable(this,R.drawable.ic_menu_send),"mark","mark");
@@ -136,6 +142,7 @@ public class MainActivity extends AppCompatActivity
         SharedPreferences auto = getSharedPreferences("auto", Activity.MODE_PRIVATE);
         String user=auto.getString("inputname",null);
         username.setText(10);*/
+
     }
 
     @Override
@@ -188,15 +195,9 @@ public class MainActivity extends AppCompatActivity
                     .setTitle("로그아웃").setMessage("로그아웃 하시겠습니까?")
                     .setPositiveButton("로그아웃", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
+                            FirebaseAuth.getInstance().signOut();
                             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                             startActivity(intent);
-                            SharedPreferences auto = getSharedPreferences("auto", Activity.MODE_PRIVATE);
-                            SharedPreferences.Editor editor = auto.edit();
-                            //editor.clear()는 auto에 들어있는 모든 정보를 기기에서 지웁니다.
-                            editor.clear();
-                            editor.commit();
-                            Toast.makeText(getApplicationContext(), "로그아웃", Toast.LENGTH_SHORT).show();
-                            finish();
                         }
                     })
                     .setNegativeButton("취소", new DialogInterface.OnClickListener() {
@@ -256,4 +257,27 @@ public class MainActivity extends AppCompatActivity
         Intent intent = new Intent(this,c);
         startActivity(intent);
     }
+
+    public void getAllUsers() {
+        // [START get_all_users]
+        listView.setAdapter(adapter);
+        db.collection("board")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d(TAGDoc, (String)document.get("photoUrl")+(String)document.get("boardTitle")+(String)document.get("boardDescription"));
+                                adapter.addItem(Drawable.createFromPath((String)document.get("photoUrl")),(String)document.get("boardTitle"),(String)document.get("boardDescription"));
+                            }
+                            adapter.notifyDataSetChanged();
+                        } else {
+                            Log.w(TAGDoc, "Error getting documents.", task.getException());
+                        }
+                    }
+                });
+        // [END get_all_users]
+    }
+
 }
