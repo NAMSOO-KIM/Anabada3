@@ -9,6 +9,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 
 public class ListViewAdapter extends BaseAdapter{
@@ -48,7 +50,8 @@ public class ListViewAdapter extends BaseAdapter{
         ListViewItem listViewItem = listViewItemList.get(position);
 
         // 아이템 내 각 위젯에 데이터 반영
-        image.setImageDrawable(listViewItem.getIcon());
+        //image.setImageDrawable(listViewItem.getIcon());
+        Glide.with(context).load(listViewItem.getIcon()).into(image);
         titleTextView.setText(listViewItem.getTitle());
         descTextView.setText(listViewItem.getDesc());
         return convertView;
@@ -67,7 +70,7 @@ public class ListViewAdapter extends BaseAdapter{
     }
 
     // 아이템 데이터 추가를 위한 함수. 개발자가 원하는대로 작성 가능.
-    public void addItem(Drawable icon, String title, String desc) {
+    public void addItem(String icon, String title, String desc) {
         ListViewItem item = new ListViewItem();
 
         item.setIcon(icon);

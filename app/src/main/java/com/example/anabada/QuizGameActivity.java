@@ -2,6 +2,7 @@ package com.example.anabada;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -13,8 +14,22 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Exclude;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 public class QuizGameActivity extends AppCompatActivity {
@@ -25,6 +40,13 @@ public class QuizGameActivity extends AppCompatActivity {
     TextView textview_qz,textView_qz_hint;
     Random rnd;
     EditText quiz_ex;
+    private DatabaseReference mDatabase;
+    private String username;
+    private String userID;
+    long score;
+    static FirebasePost post;
+    static Map<String, Object> postValues = null;
+    private static final String TAG = "DocSnippets";
 
     private Button[] mButton = new Button[16];
     private int current_number,time=0;
@@ -40,6 +62,14 @@ public class QuizGameActivity extends AppCompatActivity {
         textview_qz=(TextView) findViewById(R.id.textView_qz);
         textView_qz_hint=(TextView) findViewById(R.id.textView_qz_hint);
         quiz_ex=(EditText)findViewById(R.id.quiz_ex);
+
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            // Name, email address, and profile photo Url
+            userID = user.getUid();
+        }
+        getDocument();
 
         Toast.makeText(getApplicationContext(),"퀴즈를 빠르게 맞춰주세요",Toast.LENGTH_LONG).show();
 
@@ -140,6 +170,7 @@ public class QuizGameActivity extends AppCompatActivity {
         }
         if(current_number == 6) {
             IsRunning = false;
+            score=(long)mProgressBar.getProgress();
             AlertDialog mDialog = createDialogBox();
             mDialog.show();
         }
@@ -153,7 +184,9 @@ public class QuizGameActivity extends AppCompatActivity {
 
         mBuilder.setPositiveButton("등수 확인", new DialogInterface.OnClickListener(){
             public void onClick(DialogInterface dialog, int which){
-
+                postFirebaseDatabase(true);
+                Intent intent =new Intent(getApplicationContext(),ScoreActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -182,6 +215,62 @@ public class QuizGameActivity extends AppCompatActivity {
             textview_qz.setText("운동종목인 마라톤을 금지하는 페르시아의 후예인 나라는?");
             textView_qz_hint.setText("hint : 이란, 아랍에미리트, 이스라엘, 이라크");
         }
+    }
+
+    public class FirebasePost {
+        public Long score;
+        public String name;
+
+        public FirebasePost(){
+            // Default constructor required for calls to DataSnapshot.getValue(FirebasePost.class)
+        }
+
+        public FirebasePost(String name, Long score) {
+            this.score = score;
+            this.name = name;
+        }
+
+        @Exclude
+        public Map<String, Object> toMap() {
+            HashMap<String, Object> result = new HashMap<>();
+            result.put("name", name);
+            result.put("score", score);
+            return result;
+        }
+    }
+
+    public void postFirebaseDatabase(boolean add){
+        Map<String, Object> childUpdates = new HashMap<>();
+
+        if(add){
+            post = new FirebasePost(username, score);
+            postValues = post.toMap();
+        }
+        childUpdates.put("/id_list/" + username, postValues);
+        mDatabase.updateChildren(childUpdates);
+        Log.d(TAG, "postFirebase: " + username);
+    }
+
+    public void getDocument() {
+        // [START get_document]
+        DocumentReference docRef = FirebaseFirestore.getInstance().collection("users").document(userID);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        username= (String) document.get("name");
+                        Log.d(TAG, "DocumentSnapshot data: " + username);
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+        // [END get_document]
     }
 
 }

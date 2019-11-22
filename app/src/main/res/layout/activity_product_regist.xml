@@ -114,7 +114,8 @@
             android:fontFamily="@font/dovemayo_bold"
             android:gravity="center"
             android:text="닫기"
-            android:textSize="30sp" />
+            android:textSize="30sp"
+            android:onClick="close"/>
 
         <Space
             android:layout_width="wrap_content"

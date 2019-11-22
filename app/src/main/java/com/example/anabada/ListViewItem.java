@@ -3,11 +3,11 @@ package com.example.anabada;
 import android.graphics.drawable.Drawable;
 
 public class ListViewItem {
-    private Drawable image;
+    private String image;
     private String titleStr ;
     private String descStr ;
 
-    public void setIcon(Drawable icon) {
+    public void setIcon(String icon) {
         image = icon ;
     }
     public void setTitle(String title) {
@@ -17,7 +17,7 @@ public class ListViewItem {
         descStr = desc ;
     }
 
-    public Drawable getIcon() {
+    public String getIcon() {
         return this.image ;
     }
     public String getTitle() {

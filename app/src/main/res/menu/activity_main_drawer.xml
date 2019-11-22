@@ -5,14 +5,6 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_my_interest"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="내 관심목록" />
-        <item
-            android:id="@+id/nav_my_product"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="내가 올린 상품" />
-        <item
             android:id="@+id/server"
             android:icon="@drawable/ic_menu_slideshow"
             android:title="server" />
@@ -35,7 +27,7 @@
         <item
             android:id="@+id/game4"
             android:icon="@drawable/ic_menu_slideshow"
-            android:title="세균죽이기" />
+            android:title="하트누르기" />
         <item
             android:id="@+id/nav_logout"
             android:icon="@drawable/ic_menu_slideshow"

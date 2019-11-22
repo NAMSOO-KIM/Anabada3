@@ -100,6 +100,11 @@ public class Product_regist extends AppCompatActivity {
                         boardUpdate();
                         break;
                 }
+                switch (v.getId()){
+                    case R.id.board_register:
+                        boardUpdate();
+                        break;
+                }
 
 
             }
@@ -428,6 +433,11 @@ public class Product_regist extends AppCompatActivity {
                         Log.w(TAG, "Error writing document", e);
                     }
                 });
+    }
+
+    public void close(View view) {
+        Intent intent =new Intent(getApplicationContext(),MainActivity.class);
+        startActivity(intent);
     }
 }
 

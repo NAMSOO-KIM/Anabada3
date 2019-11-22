@@ -5,6 +5,9 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
@@ -43,6 +46,11 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
@@ -117,8 +125,8 @@ public class MainActivity extends AppCompatActivity
         getAllUsers();
 
 
-        adapter.addItem(ContextCompat.getDrawable(this,R.drawable.ic_menu_camera),"camera","camera");
-        adapter.addItem(ContextCompat.getDrawable(this,R.drawable.ic_menu_send),"mark","mark");
+        //adapter.addItem(ContextCompat.getDrawable(this,R.drawable.ic_menu_camera),"camera","camera");
+        //adapter.addItem(ContextCompat.getDrawable(this,R.drawable.ic_menu_send),"mark","mark");
 
         fab=(FloatingActionButton)findViewById(R.id.fab);
         fab.setOnClickListener(this);
@@ -130,11 +138,12 @@ public class MainActivity extends AppCompatActivity
 
                 String titleStr = item.getTitle() ;
                 String descStr = item.getDesc() ;
-                Drawable image = item.getIcon() ;
+                String image = item.getIcon() ;
 
                 Intent intent =new Intent(getApplicationContext(),Product_description.class);
                 intent.putExtra("title",titleStr);
                 intent.putExtra("desc",descStr);
+                intent.putExtra("image",image);
                 startActivity(intent);
             }
         });
@@ -183,14 +192,7 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_my_interest) {
-            // Handle the camera action
-            Intent intent =new Intent(getApplicationContext(),Product_interest.class);
-            startActivity(intent);
-        } else if (id == R.id.nav_my_product) {
-            Intent intent =new Intent(getApplicationContext(),Product_my.class);
-            startActivity(intent);
-        } else if (id == R.id.nav_logout) {
+        if (id == R.id.nav_logout) {
             new AlertDialog.Builder(this/* 해당 액티비티를 가르킴 */)
                     .setTitle("로그아웃").setMessage("로그아웃 하시겠습니까?")
                     .setPositiveButton("로그아웃", new DialogInterface.OnClickListener() {
@@ -269,7 +271,9 @@ public class MainActivity extends AppCompatActivity
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d(TAGDoc, (String)document.get("photoUrl")+(String)document.get("boardTitle")+(String)document.get("boardDescription"));
-                                adapter.addItem(Drawable.createFromPath((String)document.get("photoUrl")),(String)document.get("boardTitle"),(String)document.get("boardDescription"));
+                                    adapter.addItem(((String)document.get("photoUrl")),
+                                            (String)document.get("boardTitle"),
+                                            (String)document.get("boardDescription"));
                             }
                             adapter.notifyDataSetChanged();
                         } else {
@@ -278,6 +282,22 @@ public class MainActivity extends AppCompatActivity
                     }
                 });
         // [END get_all_users]
+
+    }
+
+    private Drawable drawableFromUrl(String url)throws IOException {
+        Bitmap x;
+
+            HttpURLConnection connection =
+                    (HttpURLConnection) new URL(url).openConnection();
+            connection.connect();
+            InputStream input = connection.getInputStream();
+
+            x = BitmapFactory.decodeStream(input);
+            return new BitmapDrawable(getResources(),x);
+
+
+
     }
 
 }

@@ -1,9 +1,11 @@
 package com.example.anabada;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -13,11 +15,32 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Exclude;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class HeartPressActivity extends AppCompatActivity implements View.OnClickListener{
     ProgressBar mProgressBar;
     TextView mTextView_progress;
     Boolean IsRunning;
     ProgressHandler mHandler_progress;
+    private DatabaseReference mDatabase;
+    private String username;
+    private String userID;
+    long score;
+    static FirebasePost post;
+    static  Map<String, Object> postValues = null;
+    private static final String TAG = "DocSnippets";
 
     private ImageView[] mButton = new ImageView[20];
     private int[] health=new int[20];
@@ -31,6 +54,13 @@ public class HeartPressActivity extends AppCompatActivity implements View.OnClic
         mProgressBar = (ProgressBar)findViewById(R.id.progressBar_bc);
         mTextView_progress = (TextView) findViewById(R.id.textView_progress_bc);
         mHandler_progress = new ProgressHandler();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            // Name, email address, and profile photo Url
+            userID = user.getUid();
+        }
+        getDocument();
 
         mButton[0] = (ImageView) findViewById(R.id.imageView1);
         mButton[1] = (ImageView) findViewById(R.id.imageView2);
@@ -121,6 +151,7 @@ public class HeartPressActivity extends AppCompatActivity implements View.OnClic
         }
         if(current_number == 0) {
             IsRunning = false;
+            score=(long)mProgressBar.getProgress();
             AlertDialog mDialog = createDialogBox();
             mDialog.show();
         }
@@ -133,11 +164,69 @@ public class HeartPressActivity extends AppCompatActivity implements View.OnClic
 
         mBuilder.setPositiveButton("등수 확인", new DialogInterface.OnClickListener(){
             public void onClick(DialogInterface dialog, int which){
-
+                postFirebaseDatabase(true);
+                Intent intent =new Intent(getApplicationContext(),ScoreActivity.class);
+                startActivity(intent);
             }
         });
 
         AlertDialog mAlertDialog = mBuilder.create();
         return mAlertDialog;
     } // 점수 창 뜨기 구현
+
+    public class FirebasePost {
+        public Long score;
+        public String name;
+
+        public FirebasePost(){
+            // Default constructor required for calls to DataSnapshot.getValue(FirebasePost.class)
+        }
+
+        public FirebasePost(String name, Long score) {
+            this.score = score;
+            this.name = name;
+        }
+
+        @Exclude
+        public Map<String, Object> toMap() {
+            HashMap<String, Object> result = new HashMap<>();
+            result.put("name", name);
+            result.put("score", score);
+            return result;
+        }
+    }
+
+    public void postFirebaseDatabase(boolean add){
+        Map<String, Object> childUpdates = new HashMap<>();
+
+        if(add){
+            post = new FirebasePost(username, score);
+            postValues = post.toMap();
+        }
+        childUpdates.put("/id_list/" + username, postValues);
+        mDatabase.updateChildren(childUpdates);
+        Log.d(TAG, "postFirebase: " + username);
+    }
+
+    public void getDocument() {
+        // [START get_document]
+        DocumentReference docRef = FirebaseFirestore.getInstance().collection("users").document(userID);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        username= (String) document.get("name");
+                        Log.d(TAG, "DocumentSnapshot data: " + username);
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+        // [END get_document]
+    }
 }

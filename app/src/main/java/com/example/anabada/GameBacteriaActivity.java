@@ -1,10 +1,12 @@
 package com.example.anabada;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -23,6 +25,19 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Exclude;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 public class GameBacteriaActivity extends AppCompatActivity implements View.OnClickListener{
@@ -34,6 +49,13 @@ public class GameBacteriaActivity extends AppCompatActivity implements View.OnCl
     private ImageView[] mButton = new ImageView[20];
     private int[] health=new int[20];
     private int current_number;
+    private DatabaseReference mDatabase;
+    private String username;
+    private String userID;
+    long score;
+    static FirebasePost post;
+    static Map<String, Object> postValues = null;
+    private static final String TAG = "DocSnippets";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +105,13 @@ public class GameBacteriaActivity extends AppCompatActivity implements View.OnCl
         for (int i = 0; i < 20; i++) {
             mButton[i].setOnClickListener(this);
         }*/
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            // Name, email address, and profile photo Url
+            userID = user.getUid();
+        }
+        getDocument();
     }
 
     public class ProgressHandler extends Handler {
@@ -144,6 +173,7 @@ public class GameBacteriaActivity extends AppCompatActivity implements View.OnCl
         }
         if(current_number == 0) {
             IsRunning = false;
+            score=(long)mProgressBar.getProgress();
             AlertDialog mDialog = createDialogBox();
             mDialog.show();
         }
@@ -156,11 +186,69 @@ public class GameBacteriaActivity extends AppCompatActivity implements View.OnCl
 
         mBuilder.setPositiveButton("등수 확인", new DialogInterface.OnClickListener(){
             public void onClick(DialogInterface dialog, int which){
-
+                postFirebaseDatabase(true);
+                Intent intent =new Intent(getApplicationContext(),ScoreActivity.class);
+                startActivity(intent);
             }
         });
 
         AlertDialog mAlertDialog = mBuilder.create();
         return mAlertDialog;
     } // 점수 창 뜨기 구현
+
+    public class FirebasePost {
+        public Long score;
+        public String name;
+
+        public FirebasePost(){
+            // Default constructor required for calls to DataSnapshot.getValue(FirebasePost.class)
+        }
+
+        public FirebasePost(String name, Long score) {
+            this.score = score;
+            this.name = name;
+        }
+
+        @Exclude
+        public Map<String, Object> toMap() {
+            HashMap<String, Object> result = new HashMap<>();
+            result.put("name", name);
+            result.put("score", score);
+            return result;
+        }
+    }
+
+    public void postFirebaseDatabase(boolean add){
+        Map<String, Object> childUpdates = new HashMap<>();
+
+        if(add){
+            post = new FirebasePost(username, score);
+            postValues = post.toMap();
+        }
+        childUpdates.put("/id_list/" + username, postValues);
+        mDatabase.updateChildren(childUpdates);
+        Log.d(TAG, "postFirebase: " + username);
+    }
+
+    public void getDocument() {
+        // [START get_document]
+        DocumentReference docRef = FirebaseFirestore.getInstance().collection("users").document(userID);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        username= (String) document.get("name");
+                        Log.d(TAG, "DocumentSnapshot data: " + username);
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+        // [END get_document]
+    }
 }
