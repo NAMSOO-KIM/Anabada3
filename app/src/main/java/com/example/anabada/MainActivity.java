@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity
 
         //유저 없으면 사용자 정보 등록화면으로 전환
         if(user == null){
-            myStartActivity(LoginActivity.class);
+            //myStartActivity(LoginActivity.class);
         }
         else {
             FirebaseFirestore db = FirebaseFirestore.getInstance();

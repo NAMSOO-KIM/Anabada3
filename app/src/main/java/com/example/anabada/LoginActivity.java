@@ -45,12 +45,10 @@ public class LoginActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         setContentView(R.layout.activity_login);
 
-        final RadioButton option_client=(RadioButton)findViewById(R.id.checkBox1);
-        final RadioButton option_server=(RadioButton)findViewById(R.id.checkBox2);
-        radioGroup=(RadioGroup)findViewById(R.id.radioGroup);
 
 
         findViewById(R.id.gotomainButton).setOnClickListener(onClickListener);//gotomain버튼 클릭시 로직
+        findViewById(R.id.gotoregistButton).setOnClickListener(onClickListener);
 
 
     }
@@ -61,15 +59,11 @@ public class LoginActivity extends AppCompatActivity {
             switch(v.getId())
             {
                 case R.id.gotomainButton:
-                    signUp();
                     Log.w(TAG, "signUp done");
-                    AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-                                builder.setMessage("로그인 완료!")
-                                        .setPositiveButton("확인", null)
-                                        .create()
-                                        .show();
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    LoginActivity.this.startActivity(intent);
+                    signUp();
+                    break;
+                case R.id.gotoregistButton:
+                    createUp();
                     break;
 
             }
@@ -90,6 +84,34 @@ public class LoginActivity extends AppCompatActivity {
         String username = ((EditText)findViewById(R.id.idText)).getText().toString();
         String password = ((EditText)findViewById(R.id.idText)).getText().toString();
         Log.w(TAG, "name pass");
+        mAuth.signInWithEmailAndPassword(username, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.w(TAG, "createUserWithEmail:success");
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            LoginActivity.this.startActivity(intent);
+
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                            startToast("회원 정보가 없습니다");
+
+                        }
+                    }
+                });
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        //Log.w(TAG, user.getUid());
+        Log.w(TAG, "create done");
+    }
+
+    private void createUp(){
+        String username= ((EditText)findViewById(R.id.idText)).getText().toString();
+        String password = ((EditText)findViewById(R.id.idText)).getText().toString();
+        Log.w(TAG, "name pass");
         mAuth.createUserWithEmailAndPassword(username, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -98,19 +120,21 @@ public class LoginActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.w(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+                            startToast("회원 가입 완료!!");
 
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            startToast(task.getException().toString());
+                            startToast("회원정보가 존재합니다.");
 
                         }
                     }
                 });
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        Log.w(TAG, user.getUid());
+        //Log.w(TAG, user.getUid());
         Log.w(TAG, "create done");
     }
+
     private void startToast(String msg) {
         Toast.makeText(this,msg,Toast.LENGTH_SHORT).show();
     }

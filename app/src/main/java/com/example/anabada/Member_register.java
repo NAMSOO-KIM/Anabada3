@@ -16,6 +16,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthActionCodeException;
 import com.google.firebase.auth.FirebaseUser;
@@ -25,6 +26,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class Member_register extends AppCompatActivity {
 
     private static final String TAG="Member_register";
+    private FirebaseAuth mAuth;
 
     @Override
     public void onBackPressed(){
@@ -35,6 +37,7 @@ public class Member_register extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_member_register);
+        mAuth = FirebaseAuth.getInstance();
 
         Button memberbutton = findViewById(R.id.member_register);
         memberbutton.setOnClickListener(new View.OnClickListener() {
@@ -43,6 +46,7 @@ public class Member_register extends AppCompatActivity {
                 switch (v.getId()){
                     case R.id.member_register:
                         profileUpdate();
+                        //signUp();
                         break;
                 }
             }
