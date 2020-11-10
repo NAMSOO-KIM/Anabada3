@@ -44,6 +44,6 @@
 * Android SDK 8.0
 * API 24
 
-### 유튜브 링크
+### 시연 동영상
 https://youtu.be/AZoqhbhtEA0
 
