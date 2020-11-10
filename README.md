@@ -43,3 +43,7 @@
 * FireBase(DB)
 * Android SDK 8.0
 * API 24
+
+### 유튜브 링크
+https://youtu.be/AZoqhbhtEA0
+
